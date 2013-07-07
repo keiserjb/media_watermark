@@ -147,6 +147,7 @@ function media_watermark_form_alter(&$form, $form_state, $form_id) {
  */
 function media_watermark_add_watermark(&$form, &$form_state) {
   watchdog('test', serialize($form_state['values']));
+  dpm($form_state['values']);
   if (!$form_state['values']['no_watermark']) {
     //uploaded file
 	if(is_object($form_state['values']['upload'])) {
