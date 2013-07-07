@@ -1,10 +1,10 @@
 <?php
 /**
- * flex2_media_watermark settings form.
+ * media_watermark settings form.
  */
-function flex2_media_watermark_edit_settings($form, &$form_state) {
+function media_watermark_edit_settings($form, &$form_state) {
   $form = array();
-  $output = flex2_media_watermark_render_table();
+  $output = media_watermark_render_table();
   $form['markup'] = array(
     '#type' => 'item',
     '#markup' => $output,
@@ -15,7 +15,7 @@ function flex2_media_watermark_edit_settings($form, &$form_state) {
 /**
  * function to create table of all watermarks
  */
-function flex2_media_watermark_render_table() {
+function media_watermark_render_table() {
   //here we use theme_table
   $header = array(
     'wid' => t('Edit/Delete Watermark'),
@@ -27,7 +27,7 @@ function flex2_media_watermark_render_table() {
     'ver_margin' => t('Vertical margin'),
     'alpha' => t('alpha'),
   );
-  $rows = flex2_media_watermark_get_watermarks();
+  $rows = media_watermark_get_watermarks();
   //here we will add edit delete links
   foreach ($rows as $key => $value) {
     $wid = reset($value);

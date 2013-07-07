@@ -1,4 +1,4 @@
-name = Flex2 Media Watermark
+name = Media Watermark
 description = Adding watermark for Media Browser Plus uploaded images.
 core = "7.x"
 package = "Media"

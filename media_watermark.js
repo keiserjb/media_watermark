@@ -1,6 +1,6 @@
 (function ($) {
 
-    Drupal.behaviors.flex2_media_watermark = {
+    Drupal.behaviors.media_watermark = {
         attach: function (context, settings) {
             jQuery('#edit-watermarks-images .image-hidden').hide();
             jQuery('#edit-watermarks-images .image-hidden').first().show();

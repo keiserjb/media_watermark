@@ -1,6 +1,6 @@
 <?php
-function flex2_media_watermark_delete_form($form, &$form_state) {
-  $name = flex2_media_watermark_get_name(arg(5));
+function media_watermark_delete_form($form, &$form_state) {
+  $name = media_watermark_get_name(arg(5));
   if (!empty($name)) {
     $form['delete_watermark'] = array(
       '#type' => 'item',
@@ -9,7 +9,7 @@ function flex2_media_watermark_delete_form($form, &$form_state) {
       '#required' => TRUE,
     );
 
-    $form['#submit'][] = 'flex2_media_watermark_form_submit';
+    $form['#submit'][] = 'media_watermark_form_submit';
     return system_settings_form($form);
   }
   else {
@@ -20,7 +20,7 @@ function flex2_media_watermark_delete_form($form, &$form_state) {
 /**
  * Submit watermark settings.
  */
-function flex2_media_watermark_form_submit($form, &$form_state) {
+function media_watermark_form_submit($form, &$form_state) {
   db_delete('media_watermark')
     ->condition('wid', arg(5))
     ->execute();

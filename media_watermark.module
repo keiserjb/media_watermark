@@ -3,7 +3,7 @@
 /**
  * Implements hook_permission().
  */
-function flex2_media_watermark_permission() {
+function media_watermark_permission() {
   return array(
     'flex2 media watermark control' => array(
       'title' => t('Control watermark'),
@@ -15,16 +15,16 @@ function flex2_media_watermark_permission() {
 /**
  * Implements hook_menu().
  */
-function flex2_media_watermark_menu() {
+function media_watermark_menu() {
   $items = array();
 
   $items['admin/config/media/watermark'] = array(
     'title' => 'Media Watermark settings',
     'description' => 'Control how to apply watermark.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('flex2_media_watermark_edit_settings'),
+    'page arguments' => array('media_watermark_edit_settings'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'includes/flex2_media_watermark_edit.admin.inc',
+    'file' => 'includes/media_watermark_edit.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -32,9 +32,9 @@ function flex2_media_watermark_menu() {
     'title' => 'Edit Watermarks',
     'description' => 'Edit watermarks',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('flex2_media_watermark_edit_settings'),
+    'page arguments' => array('media_watermark_edit_settings'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'includes/flex2_media_watermark_edit.admin.inc',
+    'file' => 'includes/media_watermark_edit.admin.inc',
     'weight' => 1,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
@@ -43,9 +43,9 @@ function flex2_media_watermark_menu() {
     'title' => 'Add watermark',
     'description' => 'Add watermark.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('flex2_media_watermark_form'),
+    'page arguments' => array('media_watermark_form'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'includes/flex2_media_watermark_add.admin.inc',
+    'file' => 'includes/media_watermark_add.admin.inc',
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
   );
@@ -54,18 +54,18 @@ function flex2_media_watermark_menu() {
     'title' => 'Add watermark',
     'description' => 'Add watermark.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('flex2_media_watermark_form'),
+    'page arguments' => array('media_watermark_form'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'includes/flex2_media_watermark_add.admin.inc',
+    'file' => 'includes/media_watermark_add.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/config/media/watermark/delete/%'] = array(
     'title' => 'Delete watermark',
     'description' => 'Delete watermark.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('flex2_media_watermark_delete_form'),
+    'page arguments' => array('media_watermark_delete_form'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'includes/flex2_media_watermark_delete.admin.inc',
+    'file' => 'includes/media_watermark_delete.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
 
@@ -76,7 +76,7 @@ function flex2_media_watermark_menu() {
  * function to get all watermarks array stored in db
  * @return array $result array of all stored watermarks
  */
-function flex2_media_watermark_get_watermarks() {
+function media_watermark_get_watermarks() {
   $result = db_query("select * from {media_watermark}");
   if (isset($result) && !empty($result)) {
     return $result->fetchAll(PDO::FETCH_ASSOC);
@@ -88,7 +88,7 @@ function flex2_media_watermark_get_watermarks() {
  * @param int|string $id watermark id
  * @return string $result watermark name
  */
-function flex2_media_watermark_get_name($id) {
+function media_watermark_get_name($id) {
   $result = db_query('SELECT name FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
   $result = $result->fetchObject();
   if (!empty($result)) {
@@ -102,7 +102,7 @@ function flex2_media_watermark_get_name($id) {
  * @param int|string $id watermark id
  * @return object $result
  */
-function flex2_media_watermark_get_watermark($id) {
+function media_watermark_get_watermark($id) {
   $result = db_query('SELECT * FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
   $result = $result->fetchObject();
   if (!empty($result)) {
@@ -113,7 +113,7 @@ function flex2_media_watermark_get_watermark($id) {
 /*
 * Implement hook_form_alter() for IMCE file uploading forms.
 */
-function flex2_media_watermark_form_alter(&$form, $form_state, $form_id) {
+function media_watermark_form_alter(&$form, $form_state, $form_id) {
   if (in_array($form_id, array('file_entity_add_upload_multiple', 'file_entity_add_upload'))) {
     $form['no_watermark'] = array(
       '#type' => 'checkbox',
@@ -121,9 +121,9 @@ function flex2_media_watermark_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => FALSE,
       '#weight' => -10,
     );
-    $watermarks = flex2_media_watermark_get_watermarks();
-    $names = flex2_media_watermark_prepare_names($watermarks);
-    $images = flex2_media_watermark_prepare_images($watermarks);
+    $watermarks = media_watermark_get_watermarks();
+    $names = media_watermark_prepare_names($watermarks);
+    $images = media_watermark_prepare_images($watermarks);
     $form['watermarks_names'] = array(
       '#type' => 'select',
       '#options' => $names,
@@ -136,40 +136,40 @@ function flex2_media_watermark_form_alter(&$form, $form_state, $form_id) {
       '#weight' => -8,
     );
     $form['#attached']['js'] = array(
-      drupal_get_path('module', 'flex2_media_watermark') . '/flex2_media_watermark.js',
+      drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
     );
-    array_unshift($form['#submit'], 'flex2_media_watermark_add_watermark');
+    array_unshift($form['#submit'], 'media_watermark_add_watermark');
   }
 }
 
 /**
  *
  */
-function flex2_media_watermark_add_watermark(&$form, &$form_state) {
+function media_watermark_add_watermark(&$form, &$form_state) {
   watchdog('test', serialize($form_state['values']));
   if (!$form_state['values']['no_watermark']) {
     //uploaded file
     if(!is_array($form_state['values']['upload'])){
       $uploaded = file_load($form_state['values']['upload']);
       $file_path = drupal_realpath($uploaded->uri);
-      flex2_media_watermark_create_image($file_path, $form_state);
+      media_watermark_create_image($file_path, $form_state);
     }
     else {
       foreach ($form_state['values']['upload'] as $key => $value) {
         $file_path = drupal_realpath($value['tmppath']);
-        flex2_media_watermark_create_image($file_path, $form_state);
+        media_watermark_create_image($file_path, $form_state);
       }
     }
   }
 }
 
 /**
- * flex2_media_watermark_create_image()
+ * media_watermark_create_image()
  * function to create jpeg image file
  * @param string $file_path temporary path of uploaded file
  * @param array $form_state array of form state
  */
-function flex2_media_watermark_create_image($file_path, $form_state) {
+function media_watermark_create_image($file_path, $form_state) {
   $watermark_obj = db_query("SELECT * FROM {media_watermark} WHERE fid = :fid", array(':fid' => $form_state['values']['watermarks_names']));
   $watermark_obj = $watermark_obj->fetchObject();
   $watermark_file = file_load($watermark_obj->fid);
@@ -181,11 +181,11 @@ function flex2_media_watermark_create_image($file_path, $form_state) {
   imagejpeg($im, $file_path, 80);
 }
 
-/** function flex2_media_watermark_prepare_names().
+/** function media_watermark_prepare_names().
  * @param array $results
  * @return array
  */
-function flex2_media_watermark_prepare_names($results) {
+function media_watermark_prepare_names($results) {
   $names = array();
   foreach ($results as $key => $value) {
     $names[$value['fid']] = $value['name'];
@@ -193,11 +193,11 @@ function flex2_media_watermark_prepare_names($results) {
   return $names;
 }
 
-/** function flex2_media_watermark_prepare_names().
+/** function media_watermark_prepare_names().
  * @param array $results
  * @return array
  */
-function flex2_media_watermark_prepare_images($results) {
+function media_watermark_prepare_images($results) {
   $images = '';
   foreach ($results as $key => $value) {
     $file = file_load($value['fid']);

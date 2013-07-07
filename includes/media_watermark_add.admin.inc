@@ -1,11 +1,11 @@
 <?php
 /**
- * flex2_media_watermark settings form.
+ * media_watermark settings form.
  */
-function flex2_media_watermark_form($form, &$form_state) {
+function media_watermark_form($form, &$form_state) {
   if(arg(5)){
     drupal_set_title(t('Edit watermark'));
-    $values = flex2_media_watermark_get_watermark(arg(5));
+    $values = media_watermark_get_watermark(arg(5));
   }
   $form['#attributes'] = array('enctype' => "multipart/form-data");
   $form['watermark_image'] = array(
@@ -59,21 +59,21 @@ function flex2_media_watermark_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  $form['#validate'][] = 'flex2_media_watermark_form_validate';
-  $form['#submit'][] = 'flex2_media_watermark_form_submit';
+  $form['#validate'][] = 'media_watermark_form_validate';
+  $form['#submit'][] = 'media_watermark_form_submit';
   return system_settings_form($form);
 }
 
 /**
  * Validate watermark settings.
  */
-function flex2_media_watermark_form_validate(&$form, &$form_state) {
+function media_watermark_form_validate(&$form, &$form_state) {
 }
 
 /**
  * Submit watermark settings.
  */
-function flex2_media_watermark_form_submit($form, &$form_state) {
+function media_watermark_form_submit($form, &$form_state) {
   if (isset($form_state['values']['watermark_image'])) {
     $data = array(
       'fid' => $form_state['values']['watermark_image'],

@@ -2,7 +2,7 @@
 /*
  * Implementation of hook_schema()
  */
-function flex2_media_watermark_schema() {
+function media_watermark_schema() {
   $schema['media_watermark'] = array(
     'description' => t('Watermark elements'),
     'fields' => array(
