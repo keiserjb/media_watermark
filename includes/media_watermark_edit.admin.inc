@@ -46,7 +46,7 @@ function media_watermark_render_table() {
               'path' => 'admin/config/media/watermark/edit/' . $wid,
               'options' => array('html' => TRUE,),
             ),
-            'image_style' => 'watermark_330x120',
+            'image_style' => 'media_watermark',
           ));
 		  $rows[$key]['fid'] = $image;
         }

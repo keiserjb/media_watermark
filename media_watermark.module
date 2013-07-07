@@ -216,7 +216,7 @@ function media_watermark_prepare_images($results) {
         'path' => 'admin/config/media/watermark/edit/' . $value['wid'],
         'options' => array('html' => TRUE),
       ),
-      'image_style' => 'watermark_330x120',
+      'image_style' => 'media_watermark',
     ));
     $images .= '<div class="image-hidden" id="image-' . $value['fid'] . '">' . $image . '</div>';
   }
