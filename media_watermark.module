@@ -114,7 +114,7 @@ function media_watermark_get_watermark($id) {
 * Implement hook_form_alter() for IMCE file uploading forms.
 */
 function media_watermark_form_alter(&$form, $form_state, $form_id) {
-  if (in_array($form_id, array('file_entity_add_upload_multiple', 'file_entity_add_upload'))) {
+  if (in_array($form_id, array('file_entity_add_upload_multiple', 'file_entity_add_upload', 'media_add_upload'))) {
     $form['no_watermark'] = array(
       '#type' => 'checkbox',
       '#title' => t('No watermark'),
@@ -149,7 +149,11 @@ function media_watermark_add_watermark(&$form, &$form_state) {
   watchdog('test', serialize($form_state['values']));
   if (!$form_state['values']['no_watermark']) {
     //uploaded file
-    if(!is_array($form_state['values']['upload'])){
+	if(is_object($form_state['values']['upload'])) {
+      $file_path = drupal_realpath($form_state['values']['upload']->uri);
+      media_watermark_create_image($file_path, $form_state);
+    }
+    elseif(is_int($form_state['values']['upload'])) {
       $uploaded = file_load($form_state['values']['upload']);
       $file_path = drupal_realpath($uploaded->uri);
       media_watermark_create_image($file_path, $form_state);
@@ -211,7 +215,7 @@ function media_watermark_prepare_images($results) {
         'path' => 'admin/config/media/watermark/edit/' . $value['wid'],
         'options' => array('html' => TRUE),
       ),
-      'image_style' => 'watermark_330x120',
+      'image_style' => 'media_watermark',
     ));
     $images .= '<div class="image-hidden" id="image-' . $value['fid'] . '">' . $image . '</div>';
   }

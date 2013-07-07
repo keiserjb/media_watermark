@@ -62,3 +62,27 @@ function media_watermark_schema() {
 
   return $schema;
 }
+/**
+*Implements hook_install().
+*create media_watermark image style.
+*/
+function media_watermark_install() {
+  $style = image_style_save(array('name' => 'media_watermark'));
+  $effect = array(
+    'name' => 'image_scale',
+    'data' => array(
+      'width' => 200,
+      //'height' => 64,
+      'upscale' => FALSE,
+    ),
+    'isid' => $style['isid'],
+  );
+  image_effect_save($effect);
+}
+/**
+*Implements hook_uninstall().
+delete media_watermark image style.
+*/
+function media_watermark_uninstall() {
+   image_style_delete(image_style_load('media_watermark'));
+}
