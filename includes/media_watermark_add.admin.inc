@@ -100,11 +100,11 @@ function media_watermark_form_submit($form, &$form_state) {
     }
 
     $file = file_load($form_state['values']['watermark_image']);
-    $derivative_uri = image_style_path('watermark_330x120', $file->uri);
+    $derivative_uri = image_style_path('media_watermark', $file->uri);
     // Create the image.
-    $image_style = image_style_load('watermark_330x120');
+    $image_style = image_style_load('media_watermark');
     image_style_create_derivative($image_style, $file->uri, $derivative_uri);
-    image_style_flush('watermark_330x120');
+    image_style_flush('media_watermark');
 
   }
   $form_state['redirect'] = 'admin/config/media/watermark';
