@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * @file
+ * Media watermark module integration.
+ * Main interface for CRUD actions.
+ */
+
 /**
  * media_watermark settings form.
  */
@@ -43,7 +50,7 @@ function media_watermark_render_table() {
           ),
           'path' => array(
             'path' => 'admin/config/media/watermark/edit/' . $wid,
-            'options' => array('html' => TRUE,),
+            'options' => array('html' => TRUE),
           ),
           'image_style' => 'media_watermark',
         ));

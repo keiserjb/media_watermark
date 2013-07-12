@@ -1,6 +1,12 @@
 <?php
+/**
+ * @file
+ * Media watermark module install file.
+ * Add watermark database and add image style media_watermark.
+ */
+
 /*
- * Implementation of hook_schema()
+ * Implements hook_schema().
  */
 function media_watermark_schema() {
   $schema['media_watermark'] = array(
@@ -83,7 +89,7 @@ function media_watermark_install() {
 
 /**
  *Implements hook_uninstall().
-delete media_watermark image style.
+ *delete media_watermark image style.
  */
 function media_watermark_uninstall() {
   image_style_delete(image_style_load('media_watermark'));

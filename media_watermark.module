@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * @file
+ * Watermark media module
+ *
+ */
+
+/**
  * Implements hook_permission().
  */
 function media_watermark_permission() {

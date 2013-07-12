@@ -1,6 +1,15 @@
 <?php
 /**
- * media_watermark settings form.
+ * @file
+ * Media watermark module integration.
+ * Main interface for insert and update actions.
+ */
+
+/**
+ * Implements hook_form().
+ * @param $form
+ * @param $form_state
+ * @return mixed
  */
 function media_watermark_form($form, &$form_state) {
   if (arg(5)) {
@@ -71,7 +80,10 @@ function media_watermark_form_validate(&$form, &$form_state) {
 }
 
 /**
- * Submit watermark settings.
+ * Submit callback for media_watermark_form() function.
+ * Submit watermark settings. Update them and add.
+ * @param $form
+ * @param $form_state
  */
 function media_watermark_form_submit($form, &$form_state) {
   if (isset($form_state['values']['watermark_image'])) {
