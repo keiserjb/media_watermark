@@ -1,5 +1,9 @@
+/**
+ * @file
+ * Media watermark module javascript file.
+ * Contains javascript for admin interface of media watermark module.
+ */
 (function ($) {
-
     Drupal.behaviors.media_watermark = {
         attach: function (context, settings) {
             jQuery('#edit-watermarks-images .image-hidden').hide();
