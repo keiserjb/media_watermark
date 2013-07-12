@@ -1,5 +1,5 @@
 name = Media Watermark
-description = Adding watermark for Media Browser Plus uploaded images.
+description = Provides watermark functionality for images.
 core = "7.x"
 package = "Media"
 configure = "admin/config/media/watermark"
