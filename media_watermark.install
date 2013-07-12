@@ -10,57 +10,57 @@
  */
 function media_watermark_schema() {
   $schema['media_watermark'] = array(
-    'description' => t('Watermark elements'),
+    'description' => 'Watermark elements',
     'fields' => array(
       'wid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'size' => 'normal',
         'not null' => TRUE,
-        'description' => t('Watermark id'),
+        'description' => 'Watermark id',
       ),
       'fid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'size' => 'normal',
         'not null' => TRUE,
-        'description' => t('Watermark file id'),
+        'description' => 'Watermark file id',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'description' => t('Watermark Name'),
+        'description' => 'Watermark Name',
       ),
       'hor_position' => array(
         'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
-        'description' => t('Horizontal position'),
+        'description' => 'Horizontal position',
       ),
       'ver_position' => array(
         'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
-        'description' => t('Vertical position'),
+        'description' => 'Vertical position',
       ),
       'hor_margin' => array(
         'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
-        'description' => t('Horizontal margin'),
+        'description' => 'Horizontal margin',
       ),
       'ver_margin' => array(
         'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
-        'description' => t('Vertical margin'),
+        'description' => 'Vertical margin',
       ),
       'alpha' => array(
         'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
-        'description' => t('Alpha'),
+        'description' => 'Alpha',
       ),
     ),
     'primary key' => array('wid'),
