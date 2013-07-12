@@ -3,7 +3,7 @@
  * media_watermark settings form.
  */
 function media_watermark_form($form, &$form_state) {
-  if(arg(5)){
+  if (arg(5)) {
     drupal_set_title(t('Edit watermark'));
     $values = media_watermark_get_watermark(arg(5));
   }
@@ -15,12 +15,12 @@ function media_watermark_form($form, &$form_state) {
     '#upload_validators' => array('file_validate_extensions' => array('png')),
     '#description' => 'allowed files resolution is .png',
     '#required' => TRUE,
-    '#default_value' => isset($values->fid)? $values->fid : '',
+    '#default_value' => isset($values->fid) ? $values->fid : '',
   );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#default_value' => isset($values->name)? $values->name : '',
+    '#default_value' => isset($values->name) ? $values->name : '',
     '#description' => t('Set watermark name, please.'),
     '#required' => TRUE,
   );
@@ -28,34 +28,34 @@ function media_watermark_form($form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Horizontal position of watermark'),
     '#options' => array('left' => t('left'), 'middle' => t('middle'), 'right' => t('right')),
-    '#default_value' => isset($values->hor_position)? $values->hor_position : 'left',
+    '#default_value' => isset($values->hor_position) ? $values->hor_position : 'left',
     '#required' => TRUE,
   );
   $form['ver_position'] = array(
     '#type' => 'select',
     '#title' => t('Vertical position of watermark'),
     '#options' => array('top' => t('top'), 'center' => t('center'), 'bottom' => t('bottom')),
-    '#default_value' => isset($values->ver_position)? $values->ver_position : 'bottom',
+    '#default_value' => isset($values->ver_position) ? $values->ver_position : 'bottom',
     '#required' => TRUE,
   );
   $form['hor_margin'] = array(
     '#type' => 'textfield',
     '#title' => t('Horizontal margin, px'),
-    '#default_value' => isset($values->hor_margin)? $values->hor_margin : '0',
+    '#default_value' => isset($values->hor_margin) ? $values->hor_margin : '0',
     '#description' => t('Set minus or plus signed value for moving watermark to left or right from defined position.'),
     '#required' => TRUE,
   );
   $form['ver_margin'] = array(
     '#type' => 'textfield',
     '#title' => t('Vertical margin, px'),
-    '#default_value' => isset($values->ver_margin)? $values->ver_margin : '0',
+    '#default_value' => isset($values->ver_margin) ? $values->ver_margin : '0',
     '#description' => t('Set minus or plus signed value for moving watermark to higher or lower from defined position.'),
     '#required' => TRUE,
   );
   $form['alpha'] = array(
     '#type' => 'textfield',
     '#title' => t('Alpha level value'),
-    '#default_value' => isset($values->alpha)? $values->alpha : '90',
+    '#default_value' => isset($values->alpha) ? $values->alpha : '90',
     '#required' => TRUE,
   );
 
@@ -84,7 +84,7 @@ function media_watermark_form_submit($form, &$form_state) {
       'ver_margin' => $form_state['values']['ver_margin'],
       'alpha' => $form_state['values']['alpha'],
     );
-    if(arg(5)){
+    if (arg(5)) {
       db_update('media_watermark')
         ->fields($data)
         ->condition('wid', arg(5))

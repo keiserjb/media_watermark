@@ -62,10 +62,11 @@ function media_watermark_schema() {
 
   return $schema;
 }
+
 /**
-*Implements hook_install().
-*create media_watermark image style.
-*/
+ *Implements hook_install().
+ *create media_watermark image style.
+ */
 function media_watermark_install() {
   $style = image_style_save(array('name' => 'media_watermark'));
   $effect = array(
@@ -79,10 +80,11 @@ function media_watermark_install() {
   );
   image_effect_save($effect);
 }
+
 /**
-*Implements hook_uninstall().
+ *Implements hook_uninstall().
 delete media_watermark image style.
-*/
+ */
 function media_watermark_uninstall() {
-   image_style_delete(image_style_load('media_watermark'));
+  image_style_delete(image_style_load('media_watermark'));
 }

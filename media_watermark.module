@@ -150,11 +150,11 @@ function media_watermark_add_watermark(&$form, &$form_state) {
   dpm($form_state['values']);
   if (!$form_state['values']['no_watermark']) {
     //uploaded file
-	if(is_object($form_state['values']['upload'])) {
+    if (is_object($form_state['values']['upload'])) {
       $file_path = drupal_realpath($form_state['values']['upload']->uri);
       media_watermark_create_image($file_path, $form_state);
     }
-    elseif(is_int($form_state['values']['upload'])) {
+    elseif (is_int($form_state['values']['upload'])) {
       $uploaded = file_load($form_state['values']['upload']);
       $file_path = drupal_realpath($uploaded->uri);
       media_watermark_create_image($file_path, $form_state);

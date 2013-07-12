@@ -30,7 +30,7 @@ function media_watermark_render_table() {
   $rows = media_watermark_get_watermarks();
   //here we will add edit delete links
   foreach ($rows as $key => $value) {
-    if(!empty($value['wid'])) {
+    if (!empty($value['wid'])) {
       $wid = reset($value);
       $rows[$key]['wid'] = '<a style="padding-right:10px;" href="watermark/edit/' . $wid . '">' . t('Edit') . '</a><a href="watermark/delete/' . $wid . '">' . t('Delete') . '</a>';
       foreach ($value as $key1 => $value1) {
@@ -48,10 +48,10 @@ function media_watermark_render_table() {
             ),
             'image_style' => 'media_watermark',
           ));
-		  $rows[$key]['fid'] = $image;
+          $rows[$key]['fid'] = $image;
         }
       }
-	}
+    }
   }
   $table_element = array(
     '#theme' => 'table',
