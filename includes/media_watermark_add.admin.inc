@@ -36,7 +36,7 @@ function media_watermark_form($form, &$form_state) {
     '#options' => array(
       'left' => t('left'),
       'middle' => t('middle'),
-      'right' => t('right')
+      'right' => t('right'),
     ),
     '#default_value' => isset($values->hor_position) ? $values->hor_position : 'left',
     '#required' => TRUE,
@@ -47,7 +47,7 @@ function media_watermark_form($form, &$form_state) {
     '#options' => array(
       'top' => t('top'),
       'center' => t('center'),
-      'bottom' => t('bottom')
+      'bottom' => t('bottom'),
     ),
     '#default_value' => isset($values->ver_position) ? $values->ver_position : 'bottom',
     '#required' => TRUE,
@@ -86,9 +86,9 @@ function media_watermark_form_validate(&$form, &$form_state) {
 
 /**
  * Submit callback for media_watermark_form() function.
- * Submit watermark settings. Update them and add.
- * @param $form
- * @param $form_state
+ *
+ * @param array $form form array
+ * @param array $form_state from state array
  */
 function media_watermark_form_submit($form, &$form_state) {
   if (isset($form_state['values']['watermark_image'])) {
