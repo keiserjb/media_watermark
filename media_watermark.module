@@ -165,9 +165,8 @@ function media_watermark_form_alter(&$form, $form_state, $form_id) {
  *   form state array
  */
 function media_watermark_add_watermark(&$form, &$form_state) {
-  watchdog('test', serialize($form_state['values']));
   if (!$form_state['values']['no_watermark']) {
-    //uploaded file
+    // Uploaded file.
     if (is_object($form_state['values']['upload'])) {
       $file_path = drupal_realpath($form_state['values']['upload']->uri);
       media_watermark_create_image($file_path, $form_state);
