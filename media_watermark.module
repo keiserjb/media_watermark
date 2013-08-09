@@ -3,7 +3,7 @@
 /**
  * @file
  * Watermark media module
- *
+ * @author Bogdan Tur
  */
 
 /**
@@ -79,8 +79,10 @@ function media_watermark_menu() {
 }
 
 /**
- * function to get all watermarks array stored in db
- * @return array $result array of all stored watermarks
+ * Function to get all watermarks array stored in db.
+ *
+ * @return array $result
+ *   array of all stored watermarks
  */
 function media_watermark_get_watermarks() {
   $result = db_query("select * from {media_watermark}");
@@ -90,9 +92,12 @@ function media_watermark_get_watermarks() {
 }
 
 /**
- * function to get watermark name
- * @param int|string $id watermark id
- * @return string $result watermark name
+ * Function to get watermark name.
+ *
+ * @param int|string $id
+ *   watermark id
+ * @return string $result
+ *   watermark name
  */
 function media_watermark_get_name($id) {
   $result = db_query('SELECT name FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
@@ -104,9 +109,12 @@ function media_watermark_get_name($id) {
 }
 
 /**
- * function to get watermark object
- * @param int|string $id watermark id
+ * Function to get watermark object.
+ *
+ * @param int|string $id
+ *   watermark id
  * @return object $result
+ *   watermark object
  */
 function media_watermark_get_watermark($id) {
   $result = db_query('SELECT * FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
@@ -117,7 +125,7 @@ function media_watermark_get_watermark($id) {
 }
 
 /*
-* Implement hook_form_alter() for IMCE file uploading forms.
+* Implements hook_form_alter().
 */
 function media_watermark_form_alter(&$form, $form_state, $form_id) {
   if (in_array($form_id, array('file_entity_add_upload_multiple', 'file_entity_add_upload', 'media_add_upload'))) {
@@ -149,11 +157,15 @@ function media_watermark_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
+ * Function to add watermark.
  *
+ * @param array $form
+ *   form array
+ * @param array $form_state
+ *   form state array
  */
 function media_watermark_add_watermark(&$form, &$form_state) {
   watchdog('test', serialize($form_state['values']));
-  dpm($form_state['values']);
   if (!$form_state['values']['no_watermark']) {
     //uploaded file
     if (is_object($form_state['values']['upload'])) {
@@ -175,10 +187,12 @@ function media_watermark_add_watermark(&$form, &$form_state) {
 }
 
 /**
- * media_watermark_create_image()
- * function to create jpeg image file
- * @param string $file_path temporary path of uploaded file
- * @param array $form_state array of form state
+ * Function to create jpeg image file media_watermark_create_image().
+ *
+ * @param string $file_path
+ *   temporary path of uploaded file
+ * @param array $form_state
+ *   array of form state
  */
 function media_watermark_create_image($file_path, $form_state) {
   $watermark_obj = db_query("SELECT * FROM {media_watermark} WHERE fid = :fid", array(':fid' => $form_state['values']['watermarks_names']));
@@ -192,7 +206,9 @@ function media_watermark_create_image($file_path, $form_state) {
   imagejpeg($im, $file_path, 80);
 }
 
-/** function media_watermark_prepare_names().
+/**
+ * Function media_watermark_prepare_names().
+ *
  * @param array $results
  * @return array
  */
@@ -204,9 +220,14 @@ function media_watermark_prepare_names($results) {
   return $names;
 }
 
-/** function media_watermark_prepare_names().
+/**
+ * Function media_watermark_prepare_images().
+ *
+ * @todo move into theme function.
  * @param array $results
  * @return array
+ *   prepare image html
+ *
  */
 function media_watermark_prepare_images($results) {
   $images = '';
