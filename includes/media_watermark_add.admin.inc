@@ -7,8 +7,9 @@
 
 /**
  * Implements hook_form().
- * @param $form
- * @param $form_state
+ *
+ * @param array $form form array
+ * @param array $form_state form_state array
  * @return mixed
  */
 function media_watermark_form($form, &$form_state) {
