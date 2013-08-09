@@ -7,10 +7,6 @@
 
 /**
  * Implements hook_form().
- *
- * @param array $form form array
- * @param array $form_state form_state array
- * @return mixed
  */
 function media_watermark_form($form, &$form_state) {
   if (arg(5)) {
@@ -37,14 +33,22 @@ function media_watermark_form($form, &$form_state) {
   $form['hor_position'] = array(
     '#type' => 'select',
     '#title' => t('Horizontal position of watermark'),
-    '#options' => array('left' => t('left'), 'middle' => t('middle'), 'right' => t('right')),
+    '#options' => array(
+      'left' => t('left'),
+      'middle' => t('middle'),
+      'right' => t('right')
+    ),
     '#default_value' => isset($values->hor_position) ? $values->hor_position : 'left',
     '#required' => TRUE,
   );
   $form['ver_position'] = array(
     '#type' => 'select',
     '#title' => t('Vertical position of watermark'),
-    '#options' => array('top' => t('top'), 'center' => t('center'), 'bottom' => t('bottom')),
+    '#options' => array(
+      'top' => t('top'),
+      'center' => t('center'),
+      'bottom' => t('bottom')
+    ),
     '#default_value' => isset($values->ver_position) ? $values->ver_position : 'bottom',
     '#required' => TRUE,
   );
