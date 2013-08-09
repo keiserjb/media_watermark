@@ -127,8 +127,8 @@ function media_watermark_get_watermark($id) {
 }
 
 /**
-* Implements hook_form_alter().
-*/
+ * Implements hook_form_alter().
+ */
 function media_watermark_form_alter(&$form, &$form_state, $form_id) {
   if (in_array($form_id, array(
     'file_entity_add_upload_multiple',
@@ -348,7 +348,6 @@ function media_watermark_batch_finished($success, $results, $operations) {
  */
 function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   $scheme = variable_get('file_default_scheme', 'public') . '://';
-  // We can't use file_save_upload() because of http://www.jacobsingh.name/content/tight-coupling-no-not.
   foreach ($form_state['values']['upload'] as $uploaded_file) {
 
     if ($uploaded_file['status'] == 'done') {
@@ -448,7 +447,7 @@ class Watermark {
 
     }
 
-    // Set the margins for the stamp and get the height/width of the stamp image.
+    // Set the margins for stamp and get the height/width of the stamp image.
     $sx = imagesx($watermark_img_obj);
     $sy = imagesy($watermark_img_obj);
     imagecopy($main_img_obj, $watermark_img_obj, $margin_x, $margin_y, 0, 0, $sx, $sy);
