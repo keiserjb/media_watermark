@@ -397,6 +397,19 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
  * Custom watermark class
  */
 class Watermark {
+  /**
+   * Function to add watermark.
+   *
+   * @param object $main_img_obj
+   *   image object to add watermark
+   * @param object $watermark_img_obj
+   *   watermark image object
+   * @param object $watermark
+   *   watermark position object
+   *
+   * @return mixed
+   *   return resource of image with watermark already add
+   */
   public function addWatermark($main_img_obj, $watermark_img_obj, $watermark) {
     $main_img_obj_w = imagesx($main_img_obj);
     $main_img_obj_h = imagesy($main_img_obj);
