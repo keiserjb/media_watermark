@@ -82,7 +82,7 @@ function media_watermark_menu() {
  * Function to get all watermarks array stored in db.
  *
  * @return array $result
- *   array of all stored watermarks
+ * array of all stored watermarks
  */
 function media_watermark_get_watermarks() {
   $result = db_query("select * from {media_watermark}");
@@ -98,7 +98,7 @@ function media_watermark_get_watermarks() {
  *   watermark id
  *
  * @return string $result
- *   watermark name
+ * watermark name
  */
 function media_watermark_get_name($id) {
   $result = db_query('SELECT name FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
@@ -116,7 +116,7 @@ function media_watermark_get_name($id) {
  *   watermark id
  *
  * @return object $result
- *   watermark object
+ * watermark object
  */
 function media_watermark_get_watermark($id) {
   $result = db_query('SELECT * FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
@@ -129,11 +129,11 @@ function media_watermark_get_watermark($id) {
 /*
 * Implements hook_form_alter().
 */
-function media_watermark_form_alter(&$form, $form_state, $form_id) {
+function media_watermark_form_alter(&$form, &$form_state, $form_id) {
   if (in_array($form_id, array(
     'file_entity_add_upload_multiple',
     'file_entity_add_upload',
-    'media_add_upload'
+    'media_add_upload',
   ))
   ) {
     $form['no_watermark'] = array(
@@ -159,6 +159,7 @@ function media_watermark_form_alter(&$form, $form_state, $form_id) {
     $form['#attached']['js'] = array(
       drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
     );
+    // Add custom submit function.
     array_unshift($form['#submit'], 'media_watermark_add_watermark');
   }
 }
@@ -194,9 +195,9 @@ function media_watermark_add_watermark(&$form, &$form_state) {
  *
  * @param string $file_path
  *   temporary path of uploaded file
+ *
  * @param array $form_state
  *   array of form state
- *
  */
 function media_watermark_create_image($file_path, $form_state) {
   $watermark_obj = db_query("SELECT * FROM {media_watermark} WHERE fid = :fid", array(':fid' => $form_state['values']['watermarks_names']));
@@ -204,10 +205,10 @@ function media_watermark_create_image($file_path, $form_state) {
   $watermark_file = file_load($watermark_obj->fid);
   $watermark_filepath = drupal_realpath($watermark_file->uri);
   ob_start();
-  $watermark = new watermark();
+  $watermark = new Watermark();
   $img = imagecreatefromjpeg($file_path);
   $watermark_img = imagecreatefrompng($watermark_filepath);
-  $im = $watermark->test_watermark($img, $watermark_img, $watermark_obj);
+  $im = $watermark->_test_watermark($img, $watermark_img, $watermark_obj);
   imagepng($im, $file_path);
   imagedestroy($im);
   ob_end_clean();
@@ -297,11 +298,11 @@ function media_watermark_prepare_batch($form_state) {
  *
  * Callback for batch_set().
  *
- * @param $file_path
+ * @param string $file_path
  *   path to image file
  * @param array $form_state
  *   array of form state
- * @param $context
+ * @param array $context
  *   batch helper array
  *
  * @ingroup callbacks
@@ -347,9 +348,7 @@ function media_watermark_batch_finished($success, $results, $operations) {
  */
 function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   $scheme = variable_get('file_default_scheme', 'public') . '://';
-
   // We can't use file_save_upload() because of http://www.jacobsingh.name/content/tight-coupling-no-not.
-
   foreach ($form_state['values']['upload'] as $uploaded_file) {
 
     if ($uploaded_file['status'] == 'done') {
@@ -359,7 +358,6 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
       // Rename it to its original name, and put it in its final home.
       // Note - not using file_move here because if we call file_get_mime
       // (in file_uri_to_object) while it has a .tmp extension, it horks.
-
       $destination = file_unmanaged_move($source, $destination, FILE_EXISTS_RENAME);
 
       $file = file_uri_to_object($destination);
@@ -386,7 +384,7 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
     }
     $form_state['redirect'] = array(
       'admin/content/file/edit-multiple/' . implode(' ', array_keys($form_state['files'])),
-      array('query' => $destination)
+      array('query' => $destination),
     );
   }
   else {
@@ -399,7 +397,7 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
  * Custom watermark class
  */
 class Watermark {
-  function test_watermark($main_img_obj, $watermark_img_obj, $watermark) {
+  public function _test_watermark($main_img_obj, $watermark_img_obj, $watermark) {
     $main_img_obj_w = imagesx($main_img_obj);
     $main_img_obj_h = imagesy($main_img_obj);
     $watermark_img_obj_w = imagesx($watermark_img_obj);
@@ -411,24 +409,30 @@ class Watermark {
       case 'left':
         $margin_x = $hm;
         break;
+      
       case 'middle':
         // Determine center position coordinates.
         $margin_x = floor(($main_img_obj_w / 2) - ($watermark_img_obj_w / 2)) + $hm;
         break;
+
       case 'right':
         $margin_x = $main_img_obj_w - $watermark_img_obj_w + $hm;
         break;
+
     }
     switch ($watermark->ver_position) {
       case 'top':
         $margin_y = $vm;
         break;
+
       case 'center':
         $margin_y = floor(($main_img_obj_h / 2) - ($watermark_img_obj_h / 2)) + $hm;
         break;
+
       case 'bottom':
         $margin_y = $main_img_obj_h - $watermark_img_obj_h + $vm;
         break;
+
     }
 
     // Set the margins for the stamp and get the height/width of the stamp image.
