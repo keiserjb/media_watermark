@@ -70,3 +70,4 @@ function media_watermark_render_table() {
   return drupal_render($table_element);
 }
 
+
