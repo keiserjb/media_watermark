@@ -26,7 +26,7 @@ entails running the bot through a shell NOT through web browser access.
 
 1. This module REQUIRES media module.
 
-2. Copy this media_watermark/ directory to your sites/SITENAME/modules directory.
+2. Copy this media_watermark/ directory to sites/SITENAME/modules directory.
 
 3. Enable the module and configure admin/config/media/watermark.
 
