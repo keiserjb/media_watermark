@@ -7,7 +7,7 @@
  */
 
 /**
- * media_watermark settings form.
+ * Implements hook_form().
  */
 function media_watermark_edit_settings($form, &$form_state) {
   $form = array();
@@ -20,7 +20,10 @@ function media_watermark_edit_settings($form, &$form_state) {
 }
 
 /**
- * function to create table of all watermarks
+ * Function to create table of all watermarks.
+ *
+ * @return
+ *  An html of admin table.
  */
 function media_watermark_render_table() {
   //here we use theme_table

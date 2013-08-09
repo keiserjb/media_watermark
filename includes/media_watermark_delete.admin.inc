@@ -31,9 +31,9 @@ function media_watermark_delete_form($form, &$form_state) {
  * Submit callback for media_watermark_delete_form() function.
  *
  * @param array $form
- * form array
+ *  form array
  * @param array $form_state
- * form state
+ *  form state
  */
 function media_watermark_form_submit($form, &$form_state) {
   db_delete('media_watermark')

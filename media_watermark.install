@@ -71,7 +71,6 @@ function media_watermark_schema() {
 
 /**
  *Implements hook_install().
- *create media_watermark image style.
  */
 function media_watermark_install() {
   $style = image_style_save(array('name' => 'media_watermark'));
@@ -88,7 +87,6 @@ function media_watermark_install() {
 
 /**
  *Implements hook_uninstall().
- *delete media_watermark image style.
  */
 function media_watermark_uninstall() {
   image_style_delete(image_style_load('media_watermark'));
