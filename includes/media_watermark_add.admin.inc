@@ -87,8 +87,10 @@ function media_watermark_form_validate(&$form, &$form_state) {
 /**
  * Submit callback for media_watermark_form() function.
  *
- * @param array $form form array
- * @param array $form_state from state array
+ * @param array $form
+ * form array
+ * @param array $form_state
+ * from state array
  */
 function media_watermark_form_submit($form, &$form_state) {
   if (isset($form_state['values']['watermark_image'])) {

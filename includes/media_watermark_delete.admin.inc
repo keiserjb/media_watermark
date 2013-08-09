@@ -8,9 +8,6 @@
 
 /**
  * Implements hook_form().
- * @param $form
- * @param $form_state
- * @return mixed
  */
 function media_watermark_delete_form($form, &$form_state) {
   $name = media_watermark_get_name(arg(5));
@@ -32,9 +29,11 @@ function media_watermark_delete_form($form, &$form_state) {
 
 /**
  * Submit callback for media_watermark_delete_form() function.
- * Submit watermark settings.
- * @param $form
- * @param $form_state
+ *
+ * @param array $form
+ * form array
+ * @param array $form_state
+ * form state
  */
 function media_watermark_form_submit($form, &$form_state) {
   db_delete('media_watermark')
