@@ -126,7 +126,7 @@ function media_watermark_get_watermark($id) {
   }
 }
 
-/*
+/**
 * Implements hook_form_alter().
 */
 function media_watermark_form_alter(&$form, &$form_state, $form_id) {
@@ -219,6 +219,7 @@ function media_watermark_create_image($file_path, $form_state) {
  *
  * @param array $results
  *   watermarks array
+ *
  * @return array
  *   names array
  */
@@ -240,7 +241,6 @@ function media_watermark_prepare_names($results) {
  *
  * @return string
  *   html of watermark images
- *
  */
 function media_watermark_prepare_images($results) {
   $images = '';
@@ -393,7 +393,7 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
 }
 
 
-/*
+/**
  * Custom watermark class
  */
 class Watermark {

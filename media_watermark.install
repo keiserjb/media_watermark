@@ -5,7 +5,7 @@
  * Add watermark database and add image style media_watermark.
  */
 
-/*
+/**
  * Implements hook_schema().
  */
 function media_watermark_schema() {
