@@ -103,6 +103,10 @@ function media_watermark_form_submit($form, &$form_state) {
       'ver_margin' => $form_state['values']['ver_margin'],
       'alpha' => $form_state['values']['alpha'],
     );
+    $file = file_load($form_state['values']['watermark_image']);
+    $file->status = FILE_STATUS_PERMANENT;
+    file_save($file);
+
     if (arg(5)) {
       db_update('media_watermark')
         ->fields($data)
