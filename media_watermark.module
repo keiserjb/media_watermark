@@ -3,7 +3,6 @@
 /**
  * @file
  * Watermark media module
- * @author Bogdan Tur
  */
 
 /**
@@ -205,7 +204,7 @@ function media_watermark_create_image($file_path, $form_state) {
   $watermark_file = file_load($watermark_obj->fid);
   $watermark_filepath = drupal_realpath($watermark_file->uri);
   ob_start();
-  $watermark = new Watermark();
+  $watermark = new mediaWatermark();
   $img = imagecreatefromjpeg($file_path);
   $watermark_img = imagecreatefrompng($watermark_filepath);
   $im = $watermark->addWatermark($img, $watermark_img, $watermark_obj);
@@ -395,7 +394,7 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
 /**
  * Custom watermark class
  */
-class Watermark {
+class mediaWatermark {
   /**
    * Function to add watermark.
    *
