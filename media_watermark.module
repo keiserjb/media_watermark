@@ -81,8 +81,8 @@ function media_watermark_menu() {
 /**
  * Function to get all watermarks array stored in db.
  *
- * @return array $result
- * array of all stored watermarks
+ * @return array
+ *   all stored watermarks
  */
 function media_watermark_get_watermarks() {
   $result = db_query("select * from {media_watermark}");
@@ -97,8 +97,8 @@ function media_watermark_get_watermarks() {
  * @param string $id
  *   watermark id
  *
- * @return string $result
- * watermark name
+ * @return string
+ *   watermark name
  */
 function media_watermark_get_name($id) {
   $result = db_query('SELECT name FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
@@ -115,8 +115,8 @@ function media_watermark_get_name($id) {
  * @param string $id
  *   watermark id
  *
- * @return object $result
- * watermark object
+ * @return object
+ *   watermark object
  */
 function media_watermark_get_watermark($id) {
   $result = db_query('SELECT * FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
@@ -208,7 +208,7 @@ function media_watermark_create_image($file_path, $form_state) {
   $watermark = new Watermark();
   $img = imagecreatefromjpeg($file_path);
   $watermark_img = imagecreatefrompng($watermark_filepath);
-  $im = $watermark->_test_watermark($img, $watermark_img, $watermark_obj);
+  $im = $watermark->addWatermark($img, $watermark_img, $watermark_obj);
   imagepng($im, $file_path);
   imagedestroy($im);
   ob_end_clean();
@@ -397,7 +397,7 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
  * Custom watermark class
  */
 class Watermark {
-  public function _test_watermark($main_img_obj, $watermark_img_obj, $watermark) {
+  public function addWatermark($main_img_obj, $watermark_img_obj, $watermark) {
     $main_img_obj_w = imagesx($main_img_obj);
     $main_img_obj_h = imagesy($main_img_obj);
     $watermark_img_obj_w = imagesx($watermark_img_obj);
@@ -409,7 +409,7 @@ class Watermark {
       case 'left':
         $margin_x = $hm;
         break;
-      
+
       case 'middle':
         // Determine center position coordinates.
         $margin_x = floor(($main_img_obj_w / 2) - ($watermark_img_obj_w / 2)) + $hm;
