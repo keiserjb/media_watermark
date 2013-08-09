@@ -79,7 +79,6 @@ function media_watermark_install() {
     'name' => 'image_scale',
     'data' => array(
       'width' => 200,
-      //'height' => 64,
       'upscale' => FALSE,
     ),
     'isid' => $style['isid'],
