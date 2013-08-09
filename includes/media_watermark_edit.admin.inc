@@ -22,11 +22,11 @@ function media_watermark_edit_settings($form, &$form_state) {
 /**
  * Function to create table of all watermarks.
  *
- * @return
- *  An html of admin table.
+ * @return string
+ *   An html of admin table.
  */
 function media_watermark_render_table() {
-  //here we use theme_table
+  // Here we use theme_table.
   $header = array(
     'wid' => t('Edit/Delete Watermark'),
     'fid' => t('Image'),
@@ -38,7 +38,7 @@ function media_watermark_render_table() {
     'alpha' => t('alpha'),
   );
   $rows = media_watermark_get_watermarks();
-  //here we will add edit delete links
+  // Here we will add edit delete links.
   foreach ($rows as $key => $value) {
     if (!empty($value['wid'])) {
       $wid = reset($value);
@@ -49,7 +49,7 @@ function media_watermark_render_table() {
           'item' => array(
             'uri' => $file->uri,
             'alt' => t('edit'),
-            'title' => t('Edit')
+            'title' => t('Edit'),
           ),
           'path' => array(
             'path' => 'admin/config/media/watermark/edit/' . $wid,
@@ -69,3 +69,4 @@ function media_watermark_render_table() {
   );
   return drupal_render($table_element);
 }
+
