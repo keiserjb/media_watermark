@@ -18,6 +18,35 @@ function media_watermark_permission() {
 }
 
 /**
+ * Implements hook_help().
+ */
+function media_watermark_help($path, $arg) {
+  switch ($path) {
+    case 'admin/content/media':
+      return '<p>' . t('If you need to add file press + Add file.
+      Then if you need to add watermarks you need to create any => ')
+      . '<a href="' . base_path() . 'admin/config/media/watermark/add">'
+      . t('Create watermark')
+      . '</a></p>';
+      break;
+
+    case 'admin/config/media/watermark/add':
+      $link = 'https://drupal.org/files/instructions%20for%20media%20watermark%20module_0.odt';
+      $help = '<p>' . t('If you need details about parameters, please follow this link');
+      $help .= ' <a href="' . $link . '">Media Watermark Documentation</a>' . '</p>';
+      return $help;
+      break;
+
+    case 'admin/config/media/watermark':
+      $link = 'https://drupal.org/files/instructions%20for%20media%20watermark%20module_0.odt';
+      $help = '<p>' . t('Follow this link to get documentation:');
+      $help .= ' <a href="' . $link . '">Media Watermark Documentation</a>' . '</p>';
+      return $help;
+      break;
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function media_watermark_menu() {

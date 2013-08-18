@@ -19,7 +19,7 @@ function media_watermark_form($form, &$form_state) {
     '#title' => t('Watermark image'),
     '#upload_location' => 'public://watermark',
     '#upload_validators' => array('file_validate_extensions' => array('png')),
-    '#description' => 'allowed files resolution is .png',
+    '#description' => 'allowed files extension is .png',
     '#required' => TRUE,
     '#default_value' => isset($values->fid) ? $values->fid : '',
   );
@@ -27,7 +27,7 @@ function media_watermark_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Name'),
     '#default_value' => isset($values->name) ? $values->name : '',
-    '#description' => t('Set watermark name, please.'),
+    '#description' => t('Set watermark name.'),
     '#required' => TRUE,
   );
   $form['hor_position'] = array(

@@ -42,7 +42,9 @@ function media_watermark_render_table() {
   foreach ($rows as $key => $value) {
     if (!empty($value['wid'])) {
       $wid = reset($value);
-      $rows[$key]['wid'] = '<a style="padding-right:10px;" href="watermark/edit/' . $wid . '">' . t('Edit') . '</a><a href="watermark/delete/' . $wid . '">' . t('Delete') . '</a>';
+      $edit_path = url('admin/config/media/watermark/edit/' . $wid );
+      $delete_path = url('admin/config/media/watermark/delete/' . $wid);
+      $rows[$key]['wid'] = '<a style="padding-right:10px;" href="' . $edit_path  . '">' . t('Edit') . '</a><a href="' . $delete_path . '">' . t('Delete') . '</a>';
       if (!empty($value['fid'])) {
         $file = file_load($value['fid']);
         $image = theme('image_formatter', array(
