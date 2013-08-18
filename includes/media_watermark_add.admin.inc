@@ -73,26 +73,21 @@ function media_watermark_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
+  //We add or update watermarks in validation function.
+  //Against this issue https://drupal.org/node/979158.
   $form['#validate'][] = 'media_watermark_form_validate';
-  $form['#submit'][] = 'media_watermark_form_submit';
   return system_settings_form($form);
 }
 
 /**
- * Validate watermark settings.
- */
-function media_watermark_form_validate(&$form, &$form_state) {
-}
-
-/**
- * Submit callback for media_watermark_form() function.
+ * Validate callback for media_watermark_form() function.
  *
  * @param array $form
  *   form array
  * @param array $form_state
  *   from state array
  */
-function media_watermark_form_submit($form, &$form_state) {
+function media_watermark_form_validate(&$form, &$form_state) {
   if (isset($form_state['values']['watermark_image'])) {
     $data = array(
       'fid' => $form_state['values']['watermark_image'],
@@ -106,6 +101,8 @@ function media_watermark_form_submit($form, &$form_state) {
     $file = file_load($form_state['values']['watermark_image']);
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
+    global $user;
+    file_usage_add($file, 'media_watermark', 'image', $user->uid);
 
     if (arg(5)) {
       db_update('media_watermark')
@@ -121,14 +118,7 @@ function media_watermark_form_submit($form, &$form_state) {
         ->execute();
       drupal_set_message(t("Watermark has been added."));
     }
-
-    $file = file_load($form_state['values']['watermark_image']);
-    $derivative_uri = image_style_path('media_watermark', $file->uri);
-    // Create the image.
-    $image_style = image_style_load('media_watermark');
-    image_style_create_derivative($image_style, $file->uri, $derivative_uri);
-    image_style_flush('media_watermark');
-
   }
   $form_state['redirect'] = 'admin/config/media/watermark';
 }
+

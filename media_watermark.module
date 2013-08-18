@@ -135,15 +135,16 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
     'media_add_upload',
   ))
   ) {
-    $form['no_watermark'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('No watermark'),
-      '#default_value' => FALSE,
-      '#weight' => -10,
-    );
     $watermarks = media_watermark_get_watermarks();
-    $names = media_watermark_prepare_names($watermarks);
-    $images = media_watermark_prepare_images($watermarks);
+	if (!empty($watermarks)) {
+	  $form['no_watermark'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('No watermark'),
+        '#default_value' => FALSE,
+        '#weight' => -10,
+      );
+	  $names = media_watermark_prepare_names($watermarks);
+      $images = media_watermark_prepare_images($watermarks);
     $form['watermarks_names'] = array(
       '#type' => 'select',
       '#options' => $names,
@@ -160,6 +161,7 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
     );
     // Add custom submit function.
     array_unshift($form['#submit'], 'media_watermark_add_watermark');
+	}
   }
 }
 
