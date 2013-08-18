@@ -66,12 +66,6 @@ function media_watermark_form($form, &$form_state) {
     '#description' => t('Set minus or plus signed value for moving watermark to higher or lower from defined position.'),
     '#required' => TRUE,
   );
-  $form['alpha'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Alpha level value'),
-    '#default_value' => isset($values->alpha) ? $values->alpha : '90',
-    '#required' => TRUE,
-  );
 
   //We add or update watermarks in validation function.
   //Against this issue https://drupal.org/node/979158.
@@ -96,7 +90,6 @@ function media_watermark_form_validate(&$form, &$form_state) {
       'ver_position' => $form_state['values']['ver_position'],
       'hor_margin' => $form_state['values']['hor_margin'],
       'ver_margin' => $form_state['values']['ver_margin'],
-      'alpha' => $form_state['values']['alpha'],
     );
     $file = file_load($form_state['values']['watermark_image']);
     $file->status = FILE_STATUS_PERMANENT;

@@ -56,12 +56,6 @@ function media_watermark_schema() {
         'not null' => TRUE,
         'description' => 'Vertical margin',
       ),
-      'alpha' => array(
-        'type' => 'varchar',
-        'length' => 20,
-        'not null' => TRUE,
-        'description' => 'Alpha',
-      ),
     ),
     'primary key' => array('wid'),
   );

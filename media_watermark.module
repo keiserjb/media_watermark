@@ -113,7 +113,7 @@ function media_watermark_menu() {
  *   all stored watermarks
  */
 function media_watermark_get_watermarks() {
-  $result = db_query("select * from {media_watermark}");
+  $result = db_query("SELECT * FROM {media_watermark}");
   if (isset($result) && !empty($result)) {
     return $result->fetchAll(PDO::FETCH_ASSOC);
   }

@@ -35,7 +35,6 @@ function media_watermark_render_table() {
     'ver_position' => t('Vertical position'),
     'hor_margin' => t('Horizontal margin'),
     'ver_margin' => t('Vertical margin'),
-    'alpha' => t('alpha'),
   );
   $rows = media_watermark_get_watermarks();
   // Here we will add edit delete links.
