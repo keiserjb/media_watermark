@@ -3,6 +3,7 @@ description = Provides watermark functionality for images.
 core = "7.x"
 package = "Media"
 configure = "admin/config/media/watermark"
-dependencies[] = media
+dependencies[] = media (>=7.x-2.x)
+dependencies[] = file_entity (>=7.x-2.x)
 
 files[] = includes/media_watermark.inc
