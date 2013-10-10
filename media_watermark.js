@@ -7,6 +7,7 @@
 
     Drupal.behaviors.flex2_media_watermark = {
         attach: function (context, settings) {
+            jQuery('.hide-select-list').hide();
             jQuery('#edit-watermarks-images .image-hidden').hide();
             jQuery('#edit-watermarks-images .image-hidden').first().show();
             jQuery("#edit-no-watermark").click(function(){

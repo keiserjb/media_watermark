@@ -162,35 +162,44 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
     'file_entity_add_upload_multiple',
     'file_entity_add_upload',
     'media_add_upload',
+    'media_tab_upload',
   ))
   ) {
-    $watermarks = media_watermark_get_watermarks();
-	if (!empty($watermarks)) {
-	  $form['no_watermark'] = array(
-        '#type' => 'checkbox',
-        '#title' => t('No watermark'),
-        '#default_value' => FALSE,
-        '#weight' => -10,
-      );
-	  $names = media_watermark_prepare_names($watermarks);
-      $images = media_watermark_prepare_images($watermarks);
-    $form['watermarks_names'] = array(
-      '#type' => 'select',
-      '#options' => $names,
-      '#description' => t('To edit watermark just click on its image'),
-      '#weight' => -9,
-    );
-    $form['watermarks_images'] = array(
-      '#type' => 'item',
-      '#markup' => $images,
-      '#weight' => -8,
-    );
-    $form['#attached']['js'] = array(
-      drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
-    );
-    // Add custom submit function.
-    array_unshift($form['#submit'], 'media_watermark_add_watermark');
-	}
+    if (empty($form['field_file_image_alt_text']) && empty($form['field_file_image_title_text'])) {
+      $watermarks = media_watermark_get_watermarks();
+      if (!empty($watermarks)) {
+        $form['no_watermark'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('No watermark'),
+          '#default_value' => FALSE,
+          '#weight' => -10,
+        );
+
+        $names = media_watermark_prepare_names($watermarks);
+        $form['watermarks_names'] = array(
+          '#type' => 'select',
+          '#options' => $names,
+          '#description' => t('To edit watermark just click on its image'),
+          '#weight' => -9,
+        );
+        //Hide select list if one watermark.
+        if (count($watermarks) == 1) {
+          $form['watermarks_names']['#prefix'] = '<div class="hide-select-list">';
+          $form['watermarks_names']['#suffix'] = '</div>';
+        }
+        $images = media_watermark_prepare_images($watermarks);
+        $form['watermarks_images'] = array(
+          '#type' => 'item',
+          '#markup' => $images,
+          '#weight' => -8,
+        );
+        $form['#attached']['js'] = array(
+          drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
+        );
+        // Add custom submit function.
+        array_unshift($form['#submit'], 'media_watermark_add_watermark');
+      }
+    }
   }
 }
 
@@ -234,14 +243,33 @@ function media_watermark_create_image($file_path, $form_state) {
   $watermark_obj = $watermark_obj->fetchObject();
   $watermark_file = file_load($watermark_obj->fid);
   $watermark_filepath = drupal_realpath($watermark_file->uri);
-  ob_start();
-  $watermark = new MediaWatermark();
-  $img = imagecreatefromjpeg($file_path);
-  $watermark_img = imagecreatefrompng($watermark_filepath);
-  $im = $watermark->addWatermark($img, $watermark_img, $watermark_obj);
-  imagepng($im, $file_path);
-  imagedestroy($im);
-  ob_end_clean();
+  $watermark_extension = media_watermark_get_file_extension($watermark_filepath);
+  //Check uploaded image extension.
+  $ext = media_watermark_get_file_extension($file_path);
+  if ($ext == 'jpg' || $ext == 'jpeg') {
+    $img = imagecreatefromjpeg($file_path);
+  }
+  elseif ($ext == 'png') {
+    $img = imagecreatefrompng($file_path);
+  }
+  elseif ($ext == 'gif') {
+    $img = imagecreatefromgif($file_path);
+  }
+  if (!empty($img)) {
+    ob_start();
+    if ($watermark_extension == 'png') {
+      $watermark_img = imagecreatefrompng($watermark_filepath);
+    }
+    elseif ($watermark_extension == 'gif') {
+      $watermark_img = imagecreatefromgif($watermark_filepath);
+    }
+    $watermark = new MediaWatermark();
+    $im = $watermark->addWatermark($img, $watermark_img, $watermark_obj, $ext);
+    imagepng($im, $file_path);
+    imagedestroy($im);
+    ob_end_clean();
+  }
+
 }
 
 /**
@@ -421,67 +449,12 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   }
 }
 
-
 /**
- * Custom watermark class
+ * Helper function to get image extension.
+ *
+ * @param $file_name
+ * @return string
  */
-class MediaWatermark {
-  /**
-   * Function to add watermark.
-   *
-   * @param object $main_img_obj
-   *   image object to add watermark
-   * @param object $watermark_img_obj
-   *   watermark image object
-   * @param object $watermark
-   *   watermark position object
-   *
-   * @return mixed
-   *   return resource of image with watermark already add
-   */
-  public function addWatermark($main_img_obj, $watermark_img_obj, $watermark) {
-    $main_img_obj_w = imagesx($main_img_obj);
-    $main_img_obj_h = imagesy($main_img_obj);
-    $watermark_img_obj_w = imagesx($watermark_img_obj);
-    $watermark_img_obj_h = imagesy($watermark_img_obj);
-
-    $vm = $watermark->ver_margin;
-    $hm = $watermark->hor_margin;
-    switch ($watermark->hor_position) {
-      case 'left':
-        $margin_x = $hm;
-        break;
-
-      case 'middle':
-        // Determine center position coordinates.
-        $margin_x = floor(($main_img_obj_w / 2) - ($watermark_img_obj_w / 2)) + $hm;
-        break;
-
-      case 'right':
-        $margin_x = $main_img_obj_w - $watermark_img_obj_w + $hm;
-        break;
-
-    }
-    switch ($watermark->ver_position) {
-      case 'top':
-        $margin_y = $vm;
-        break;
-
-      case 'center':
-        $margin_y = floor(($main_img_obj_h / 2) - ($watermark_img_obj_h / 2)) + $hm;
-        break;
-
-      case 'bottom':
-        $margin_y = $main_img_obj_h - $watermark_img_obj_h + $vm;
-        break;
-
-    }
-
-    // Set the margins for stamp and get the height/width of the stamp image.
-    $sx = imagesx($watermark_img_obj);
-    $sy = imagesy($watermark_img_obj);
-    imagecopy($main_img_obj, $watermark_img_obj, $margin_x, $margin_y, 0, 0, $sx, $sy);
-    imagejpeg($main_img_obj);
-    return $main_img_obj;
-  }
+function media_watermark_get_file_extension($file_name) {
+  return substr(strrchr($file_name, '.'), 1);
 }
