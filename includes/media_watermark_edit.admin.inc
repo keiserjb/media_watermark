@@ -97,4 +97,7 @@ function media_watermark_get_sort_table_watermarks() {
     $element['pager_pager'] = array('#theme' => 'pager');
     return drupal_render($element);
   }
+  else {
+    return t('Please add at least one watermark.');
+  }
 }

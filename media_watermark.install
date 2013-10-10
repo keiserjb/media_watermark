@@ -77,6 +77,8 @@ function media_watermark_install() {
     'isid' => $style['isid'],
   );
   image_effect_save($effect);
+  //Need to execute update on install.
+  media_watermark_update_7001();
 }
 
 /**
@@ -84,4 +86,38 @@ function media_watermark_install() {
  */
 function media_watermark_uninstall() {
   image_style_delete(image_style_load('media_watermark'));
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Need this update to add initial watermarks.
+ */
+function media_watermark_update_7001() {
+  $data = array(
+    'linux' => array(
+      'file' => 'linux.png',
+      'name' => 'png watermark',
+    ),
+    'drupal' => array(
+      'file' => 'drupal-watermark.gif',
+      'name' => 'gif watermark',
+    ),
+  );
+  foreach ($data as $value) {
+    $path = drupal_get_path('module', 'media_watermark') . '/includes/img/' . $value['file'];
+    $file_temp = file_get_contents($path);
+    $file_temp = file_save_data($file_temp, 'public://watermark' . $value['file'], FILE_EXISTS_RENAME);
+    db_insert('media_watermark')
+      ->fields(array(
+        'fid' => $file_temp->fid,
+        'name' => $value['name'],
+        'hor_position' => 'left',
+        'ver_position' => 'bottom',
+        'hor_margin' => '0',
+        'ver_margin' => '0',
+
+      ))
+      ->execute();
+  }
 }
