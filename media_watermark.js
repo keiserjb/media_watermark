@@ -1,6 +1,7 @@
 /**
  * @file
  * Media watermark module javascript file.
+ * 
  * Contains javascript for admin interface of media watermark module.
  */
 
