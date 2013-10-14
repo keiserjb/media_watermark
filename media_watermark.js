@@ -9,26 +9,28 @@
 
     Drupal.behaviors.flex2_media_watermark = {
         attach: function (context, settings) {
-            jQuery('.hide-select-list').hide();
-            jQuery('#edit-watermarks-images .image-hidden').hide();
-            jQuery('.form-item-watermarks-names').hide();
-            jQuery("#edit-add-watermark").click(function(){
+            $('.hide-select-list').hide();
+            $('#edit-watermarks-images .image-hidden').hide();
+            $('.form-item-watermarks-names').hide();
+            $("#edit-add-watermark").click(function(){
                 if($('input[name=add_watermark]').is(':checked')){
-                    jQuery('#edit-watermarks-images .image-hidden').first().show();
-                    jQuery('.form-item-watermarks-names').show();
-                    jQuery('#edit-watermarks-names option').first().attr('selected', true);
-                    jQuery('#edit-watermarks-names').siblings('span.custom-select')
+                    $('#edit-upload-upload-button, #edit-upload-remove-button').hide();
+                    $('#edit-watermarks-images .image-hidden').first().show();
+                    $('.form-item-watermarks-names').show();
+                    $('#edit-watermarks-names option').first().attr('selected', true);
+                    $('#edit-watermarks-names').siblings('span.custom-select')
                         .find('span span')
-                        .text(jQuery('#edit-watermarks-names option').first().text());
+                        .text($('#edit-watermarks-names option').first().text());
                 } else {
-                    jQuery('.form-item-watermarks-names').hide();
-                    jQuery('#edit-watermarks-images .image-hidden').hide();
+                    $('#edit-upload-upload-button, #edit-upload-remove-button').show();
+                    $('.form-item-watermarks-names').hide();
+                    $('#edit-watermarks-images .image-hidden').hide();
                 }
             });
-            jQuery('#edit-watermarks-names').change(function(){
-                var val = jQuery('#edit-watermarks-names :selected').val();
-                jQuery('#edit-watermarks-images .image-hidden').hide();
-                jQuery('#edit-watermarks-images #image-' + val).show();
+            $('#edit-watermarks-names').change(function(){
+                var val = $('#edit-watermarks-names :selected').val();
+                $('#edit-watermarks-images .image-hidden').hide();
+                $('#edit-watermarks-images #image-' + val).show();
             });
         }
     };
