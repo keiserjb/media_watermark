@@ -2,6 +2,7 @@
 /**
  * @file
  * Media watermark module install file.
+ *
  * Add watermark database and add image style media_watermark.
  */
 
@@ -72,6 +73,7 @@ function media_watermark_install() {
     'name' => 'image_scale',
     'data' => array(
       'width' => 200,
+      'height' => NULL,
       'upscale' => FALSE,
     ),
     'isid' => $style['isid'],

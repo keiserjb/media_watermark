@@ -1,5 +1,12 @@
 <?php
 /**
+ * @file
+ * Media watermark class.
+ *
+ * Class to process image watermarks.
+ */
+
+/**
  * Custom watermark class.
  */
 class MediaWatermark {

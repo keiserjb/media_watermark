@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Watermark media module
+ * Watermark media module.
  */
 
 /**
@@ -11,8 +11,8 @@
 function media_watermark_permission() {
   return array(
     'media watermark control' => array(
-      'title' => t('Control watermark'),
-      'description' => t('Checkbox appear for controlling watermark at file uploading.'),
+      'title' => t('Manage watermarks on file entities'),
+      'description' => t('Checkbox appear for controlling watermarks on file entities.'),
     ),
   );
 }
@@ -107,7 +107,7 @@ function media_watermark_get_watermarks() {
 }
 
 /**
- * Function to get watermark name.
+ * Function to get watermark name by id.
  *
  * @param string $id
  *   watermark id
@@ -125,7 +125,7 @@ function media_watermark_get_name($id) {
 }
 
 /**
- * Function to get watermark object.
+ * Function to get watermark object by id.
  *
  * @param string $id
  *   watermark id
@@ -155,11 +155,11 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
     if (empty($form['field_file_image_alt_text']) && empty($form['field_file_image_title_text'])) {
       $watermarks = media_watermark_get_watermarks();
       if (!empty($watermarks)) {
-        $form['no_watermark'] = array(
+        $form['add_watermark'] = array(
           '#type' => 'checkbox',
-          '#title' => t('No watermark'),
+          '#title' => t('Add watermark'),
           '#default_value' => FALSE,
-          '#weight' => -10,
+          '#weight' => 20,
         );
 
         $names = media_watermark_prepare_names($watermarks);
@@ -167,7 +167,7 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
           '#type' => 'select',
           '#options' => $names,
           '#description' => t('To edit watermark just click on its image'),
-          '#weight' => -9,
+          '#weight' => 19,
         );
         //Hide select list if one watermark.
         if (count($watermarks) == 1) {
@@ -178,7 +178,7 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
         $form['watermarks_images'] = array(
           '#type' => 'item',
           '#markup' => $images,
-          '#weight' => -8,
+          '#weight' => 18,
         );
         $form['#attached']['js'] = array(
           drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
@@ -199,7 +199,7 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
  *   form state array
  */
 function media_watermark_add_watermark(&$form, &$form_state) {
-  if (!$form_state['values']['no_watermark']) {
+  if ($form_state['values']['add_watermark']) {
     // Uploaded file.
     if (is_object($form_state['values']['upload'])) {
       $file_path = drupal_realpath($form_state['values']['upload']->uri);
@@ -217,7 +217,7 @@ function media_watermark_add_watermark(&$form, &$form_state) {
 }
 
 /**
- * Function to create jpeg image file.
+ * Function to create image (.jpg, .jpeg, .png, .gif) file.
  *
  * @param string $file_path
  *   temporary path of uploaded file
@@ -260,7 +260,7 @@ function media_watermark_create_image($file_path, $form_state) {
 }
 
 /**
- * Function media_watermark_prepare_names().
+ * Function to return watermark names array.
  *
  * @param array $results
  *   watermarks array
@@ -277,7 +277,7 @@ function media_watermark_prepare_names($results) {
 }
 
 /**
- * Function media_watermark_prepare_images().
+ * Function to prepare watermark images html.
  *
  * @todo move into theme function.
  *
@@ -318,7 +318,7 @@ function media_watermark_prepare_images($results) {
  *   batch operations array
  */
 function media_watermark_prepare_batch($form_state) {
-  drupal_set_message('Adding watermarks.');
+  drupal_set_message(t('Adding watermarks.'));
 
   foreach ($form_state['files'] as $key => $value) {
     $file_path = drupal_realpath($value->uri);
@@ -376,10 +376,11 @@ function media_watermark_process_multiple_images($file_path, $form_state, &$cont
  */
 function media_watermark_batch_finished($success, $results, $operations) {
   if ($success) {
-    drupal_set_message('Added watermarks to ' . count($results) . ' images');
+    $count = count($results);
+    drupal_set_message(t('Added watermarks to @count images', array('@count' => $count)));
   }
   else {
-    drupal_set_message('Finished with errors.', 'error');
+    drupal_set_message(t('Finished with errors.'), 'error');
   }
 }
 

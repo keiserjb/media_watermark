@@ -3,6 +3,7 @@
 /**
  * @file
  * Media watermark module integration.
+ *
  * Main interface for delete actions.
  */
 
@@ -14,7 +15,7 @@ function media_watermark_delete_form($form, &$form_state) {
   if (!empty($name)) {
     $form['delete_watermark'] = array(
       '#type' => 'item',
-      '#markup' => t('Are you sure you want to delete ') . $name . '?',
+      '#markup' => t('Are you sure you want to delete') . ' ' . $name . '?',
       '#default_value' => '90',
       '#required' => TRUE,
     );
@@ -29,6 +30,8 @@ function media_watermark_delete_form($form, &$form_state) {
 
 /**
  * Submit callback for media_watermark_delete_form() function.
+ *
+ * Delete watermark.
  *
  * @param array $form
  *   form array

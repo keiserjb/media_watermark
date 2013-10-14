@@ -3,6 +3,7 @@
 /**
  * @file
  * Media watermark module integration.
+ *
  * Main interface for CRUD actions.
  */
 
@@ -21,6 +22,7 @@ function media_watermark_edit_settings($form, &$form_state) {
 
 /**
  * Function to get all watermarks array stored in db.
+ * Also display them as sortable table with pagination.
  *
  * @return string
  *   sorted table markup all watermarks with pagination

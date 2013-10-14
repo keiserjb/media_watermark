@@ -2,6 +2,7 @@
 /**
  * @file
  * Media watermark module integration.
+ *
  * Main interface for insert and update actions.
  */
 
@@ -75,6 +76,8 @@ function media_watermark_form($form, &$form_state) {
 
 /**
  * Validate callback for media_watermark_form() function.
+ *
+ * Add or update existing watermarks.
  *
  * @param array $form
  *   form array
