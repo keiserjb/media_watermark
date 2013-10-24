@@ -34,7 +34,7 @@ function media_watermark_get_sort_table_watermarks() {
   $header = array(
     array(
       'data' => t('Name'),
-      'field' => 'mw.name'
+      'field' => 'mw.name',
     ),
     'fid' => t('Image'),
     array(
