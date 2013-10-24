@@ -7,7 +7,9 @@
  */
 
 /**
- * Implements hook_form().
+ * Menu callback: displays interface to manage watermarks.
+ *
+ * Path: admin/config/media/watermark.
  */
 function media_watermark_form($form, &$form_state) {
   if (arg(5)) {

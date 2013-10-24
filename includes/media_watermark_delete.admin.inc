@@ -8,20 +8,18 @@
  */
 
 /**
- * Implements hook_form().
+ * Menu callback: displays interface to delete watermark.
+ *
+ * Path: admin/config/media/watermark/delete/%.
  */
 function media_watermark_delete_form($form, &$form_state) {
-  $name = media_watermark_get_name(arg(5));
+  $form_state['watermark_arg'] = arg(5);
+  $name = media_watermark_get_name($form_state['watermark_arg']);
   if (!empty($name)) {
-    $form['delete_watermark'] = array(
-      '#type' => 'item',
-      '#markup' => t('Are you sure you want to delete %name?', array('%name' => $name)),
-      '#default_value' => '90',
-      '#required' => TRUE,
-    );
-
     $form['#submit'][] = 'media_watermark_form_submit';
-    return system_settings_form($form);
+    $question = t('Are you sure you want to delete %name?', array('%name' => $name));
+    $path = 'admin/config/media/watermark';
+    return confirm_form($form, $question, $path, $description = NULL, $yes = t('Delete'), $no = NULL, $name = 'confirm');
   }
   else {
     print t('There is no watermark with this id, or it is misconfigured.');
@@ -40,7 +38,7 @@ function media_watermark_delete_form($form, &$form_state) {
  */
 function media_watermark_form_submit($form, &$form_state) {
   db_delete('media_watermark')
-    ->condition('wid', arg(5))
+    ->condition('wid', $form_state['watermark_arg'])
     ->execute();
   drupal_set_message(t('Watermark has been deleted.'));
   $form_state['redirect'] = 'admin/config/media/watermark';

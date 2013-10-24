@@ -18,35 +18,6 @@ function media_watermark_permission() {
 }
 
 /**
- * Implements hook_help().
- */
-function media_watermark_help($path, $arg) {
-  switch ($path) {
-    case 'admin/content/media':
-      return '<p>' . t('If you need to add file press + Add file.
-      Then if you need to add watermarks you need to create any => ')
-      . '<a href="' . base_path() . 'admin/config/media/watermark/add">'
-      . t('Create watermark')
-      . '</a></p>';
-      break;
-
-    case 'admin/config/media/watermark/add':
-      $link = 'https://drupal.org/files/instructions%20for%20media%20watermark%20module_0.odt';
-      $help = '<p>' . t('If you need details about parameters, please follow this link');
-      $help .= ' <a href="' . $link . '">Media Watermark Documentation</a>' . '</p>';
-      return $help;
-      break;
-
-    case 'admin/config/media/watermark':
-      $link = 'https://drupal.org/files/instructions%20for%20media%20watermark%20module_0.odt';
-      $help = '<p>' . t('Follow this link to get documentation:');
-      $help .= ' <a href="' . $link . '">Media Watermark Documentation</a>' . '</p>';
-      return $help;
-      break;
-  }
-}
-
-/**
  * Implements hook_menu().
  */
 function media_watermark_menu() {
@@ -72,8 +43,8 @@ function media_watermark_menu() {
   );
 
   $items['admin/config/media/watermark/edit/%'] = array(
-    'title' => 'Add watermark',
-    'description' => 'Add watermark.',
+    'title' => 'Edit watermark',
+    'description' => 'Edit watermark.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_watermark_form'),
     'access arguments' => array('administer site configuration'),
@@ -230,9 +201,9 @@ function media_watermark_create_image($file_path, $form_state) {
   $watermark_obj = $watermark_obj->fetchObject();
   $watermark_file = file_load($watermark_obj->fid);
   $watermark_filepath = drupal_realpath($watermark_file->uri);
-  $watermark_extension = media_watermark_get_file_extension($watermark_filepath);
+  $watermark_extension = pathinfo($watermark_filepath, PATHINFO_EXTENSION);
   // Check uploaded image extension.
-  $ext = media_watermark_get_file_extension($file_path);
+  $ext = pathinfo($file_path, PATHINFO_EXTENSION);
   if ($ext == 'jpg' || $ext == 'jpeg') {
     $img = imagecreatefromjpeg($file_path);
   }
@@ -434,14 +405,4 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   else {
     $form_state['redirect'] = 'admin/content/file';
   }
-}
-
-/**
- * Helper function to get image extension.
- *
- * @param $file_name
- * @return string
- */
-function media_watermark_get_file_extension($file_name) {
-  return substr(strrchr($file_name, '.'), 1);
 }
