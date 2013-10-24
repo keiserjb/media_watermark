@@ -68,8 +68,8 @@ function media_watermark_form($form, &$form_state) {
     '#required' => TRUE,
   );
 
-  //We add or update watermarks in validation function.
-  //Against this issue https://drupal.org/node/979158.
+  // We add or update watermarks in validation function.
+  // Against this issue https://drupal.org/node/979158.
   $form['#validate'][] = 'media_watermark_form_validate';
   return system_settings_form($form);
 }
@@ -117,4 +117,3 @@ function media_watermark_form_validate(&$form, &$form_state) {
   }
   $form_state['redirect'] = 'admin/config/media/watermark';
 }
-

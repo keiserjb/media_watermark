@@ -15,7 +15,7 @@ function media_watermark_delete_form($form, &$form_state) {
   if (!empty($name)) {
     $form['delete_watermark'] = array(
       '#type' => 'item',
-      '#markup' => t('Are you sure you want to delete') . ' ' . $name . '?',
+      '#markup' => t('Are you sure you want to delete %name?', array('%name' => $name)),
       '#default_value' => '90',
       '#required' => TRUE,
     );

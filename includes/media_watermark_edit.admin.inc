@@ -8,7 +8,9 @@
  */
 
 /**
- * Implements hook_form().
+ * Menu callback: displays interface to manage watermarks.
+ *
+ * Path: admin/config/media/watermark.
  */
 function media_watermark_edit_settings($form, &$form_state) {
   $form = array();
@@ -22,6 +24,7 @@ function media_watermark_edit_settings($form, &$form_state) {
 
 /**
  * Function to get all watermarks array stored in db.
+ *
  * Also display them as sortable table with pagination.
  *
  * @return string
@@ -33,19 +36,19 @@ function media_watermark_get_sort_table_watermarks() {
     'fid' => t('Image'),
     array(
       'data' => t('Horizontal Position'),
-      'field' => 'mw.hor_position'
+      'field' => 'mw.hor_position',
     ),
     array(
       'data' => t('Vertical Position'),
-      'field' => 'mw.ver_position'
+      'field' => 'mw.ver_position',
     ),
     array(
       'data' => t('Horizontal Margin'),
-      'field' => 'mw.hor_margin'
+      'field' => 'mw.hor_margin',
     ),
     array(
       'data' => t('Horizontal Margin'),
-      'field' => 'mw.ver_margin'
+      'field' => 'mw.ver_margin',
     ),
     'edit' => t('Edit/Delete'),
   );
@@ -83,13 +86,13 @@ function media_watermark_get_sort_table_watermarks() {
           'image_style' => 'media_watermark',
         ));
         $rows[$key]['fid'] = $image;
-        //Edit Delete.
+        // Edit Delete.
         $edit_path = url('admin/config/media/watermark/edit/' . $value['wid']);
         $delete_path = url('admin/config/media/watermark/delete/' . $value['wid']);
         $rows[$key]['wid'] = '<a style="padding-right:10px;" href="' . $edit_path . '">' . t('Edit') . '</a><a href="' . $delete_path . '">' . t('Delete') . '</a>';
       }
     }
-    //Prepare render array.
+    // Prepare render array.
     $element['pager_table'] = array(
       '#theme' => 'table',
       '#header' => $header,

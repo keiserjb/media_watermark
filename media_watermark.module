@@ -169,7 +169,7 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
           '#description' => t('To edit watermark just click on its image'),
           '#weight' => 19,
         );
-        //Hide select list if one watermark.
+        // Hide select list if one watermark.
         if (count($watermarks) == 1) {
           $form['watermarks_names']['#prefix'] = '<div class="hide-select-list">';
           $form['watermarks_names']['#suffix'] = '</div>';
@@ -231,7 +231,7 @@ function media_watermark_create_image($file_path, $form_state) {
   $watermark_file = file_load($watermark_obj->fid);
   $watermark_filepath = drupal_realpath($watermark_file->uri);
   $watermark_extension = media_watermark_get_file_extension($watermark_filepath);
-  //Check uploaded image extension.
+  // Check uploaded image extension.
   $ext = media_watermark_get_file_extension($file_path);
   if ($ext == 'jpg' || $ext == 'jpeg') {
     $img = imagecreatefromjpeg($file_path);
@@ -270,7 +270,7 @@ function media_watermark_create_image($file_path, $form_state) {
  */
 function media_watermark_prepare_names($results) {
   $names = array();
-  foreach ($results as $key => $value) {
+  foreach ($results as $value) {
     $names[$value['fid']] = $value['name'];
   }
   return $names;
@@ -289,7 +289,7 @@ function media_watermark_prepare_names($results) {
  */
 function media_watermark_prepare_images($results) {
   $images = '';
-  foreach ($results as $key => $value) {
+  foreach ($results as $value) {
     $file = file_load($value['fid']);
     $image = theme('image_formatter', array(
       'item' => array(
@@ -320,7 +320,7 @@ function media_watermark_prepare_images($results) {
 function media_watermark_prepare_batch($form_state) {
   drupal_set_message(t('Adding watermarks.'));
 
-  foreach ($form_state['files'] as $key => $value) {
+  foreach ($form_state['files'] as $value) {
     $file_path = drupal_realpath($value->uri);
     $operations[] = array(
       'media_watermark_process_multiple_images',
@@ -409,7 +409,6 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
       $file->status = FILE_STATUS_PERMANENT;
       file_save($file);
 
-      $saved_files[] = $file;
       $form_state['files'][$file->fid] = $file;
     }
     else {
