@@ -197,7 +197,8 @@ function media_watermark_add_watermark(&$form, &$form_state) {
  *   array of form state
  */
 function media_watermark_create_image($file_path, $form_state) {
-  $watermark_obj = db_query("SELECT * FROM {media_watermark} WHERE fid = :fid", array(':fid' => $form_state['values']['watermarks_names']));
+  $watermark_obj = db_query("SELECT * FROM {media_watermark} WHERE fid = :fid",
+    array(':fid' => $form_state['values']['watermarks_names']));
   $watermark_obj = $watermark_obj->fetchObject();
   $watermark_file = file_load($watermark_obj->fid);
   $watermark_filepath = drupal_realpath($watermark_file->uri);
