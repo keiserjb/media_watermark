@@ -134,7 +134,7 @@ function media_watermark_form_submit(&$form, &$form_state) {
     if (arg(5)) {
       db_update('media_watermark')
         ->fields($data)
-        ->condition('wid',arg(5))
+        ->condition('wid', arg(5))
         ->execute();
       drupal_set_message(t("Watermark has been updated."));
 

@@ -56,7 +56,10 @@ function media_watermark_get_sort_table_watermarks() {
       'data' => t('Horizontal Margin'),
       'field' => 'mw.ver_margin',
     ),
-    'edit' => t('Edit/Delete'),
+    array(
+      'data' => t('Edit/Delete'),
+      'field' => 'mw.wid',
+    ),
   );
 
   $query = db_select('media_watermark', 'mw')
