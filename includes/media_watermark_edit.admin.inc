@@ -32,7 +32,10 @@ function media_watermark_edit_settings($form, &$form_state) {
  */
 function media_watermark_get_sort_table_watermarks() {
   $header = array(
-    'fid' => t('Image'),
+    array(
+      'data' => t('Image'),
+      'field' => 'mw.fid',
+    ),
     array(
       'data' => t('Name'),
       'field' => 'mw.name',
