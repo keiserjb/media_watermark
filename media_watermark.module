@@ -28,7 +28,7 @@ function media_watermark_menu() {
     'description' => 'Control how to apply watermark.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_watermark_edit_settings'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_edit.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -37,7 +37,7 @@ function media_watermark_menu() {
     'title' => 'Add watermark',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_watermark_form'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_add.admin.inc',
     'type' => MENU_LOCAL_ACTION,
   );
@@ -47,7 +47,7 @@ function media_watermark_menu() {
     'description' => 'Edit watermark.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_watermark_form'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_add.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -56,7 +56,7 @@ function media_watermark_menu() {
     'description' => 'Delete watermark.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('media_watermark_delete_form'),
-    'access arguments' => array('administer site configuration'),
+    'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_delete.admin.inc',
     'type' => MENU_NORMAL_ITEM,
   );
@@ -87,7 +87,8 @@ function media_watermark_get_watermarks() {
  *   watermark name
  */
 function media_watermark_get_name($id) {
-  $result = db_query('SELECT name FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
+  $result = db_query('SELECT name FROM {media_watermark} WHERE wid = :wid',
+    array(':wid' => $id));
   $result = $result->fetchObject();
   if (!empty($result)) {
     $result = $result->name;
@@ -105,7 +106,8 @@ function media_watermark_get_name($id) {
  *   watermark object
  */
 function media_watermark_get_watermark($id) {
-  $result = db_query('SELECT * FROM {media_watermark} WHERE wid = :wid', array(':wid' => $id));
+  $result = db_query('SELECT * FROM {media_watermark} WHERE wid = :wid',
+    array(':wid' => $id));
   $result = $result->fetchObject();
   if (!empty($result)) {
     return $result;
@@ -163,11 +165,6 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
 
 /**
  * Callback to add watermark.
- *
- * @param array $form
- *   form array
- * @param array $form_state
- *   form state array
  */
 function media_watermark_add_watermark(&$form, &$form_state) {
   if ($form_state['values']['add_watermark']) {
@@ -358,11 +355,6 @@ function media_watermark_batch_finished($success, $results, $operations) {
 
 /**
  * Function which make same things as file_entity__add_upload_multiple_submit().
- *
- * @param array $form
- *   form array
- * @param array $form_state
- *   form state array
  */
 function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   $scheme = variable_get('file_default_scheme', 'public') . '://';

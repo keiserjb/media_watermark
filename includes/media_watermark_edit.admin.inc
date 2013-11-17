@@ -8,9 +8,9 @@
  */
 
 /**
- * Menu callback: displays interface to manage watermarks.
+ * Form constructor for the media watermark edit settings form.
  *
- * Path: admin/config/media/watermark.
+ * @ingroup forms
  */
 function media_watermark_edit_settings($form, &$form_state) {
   $form = array();
@@ -32,11 +32,11 @@ function media_watermark_edit_settings($form, &$form_state) {
  */
 function media_watermark_get_sort_table_watermarks() {
   $header = array(
+    'fid' => t('Image'),
     array(
       'data' => t('Name'),
       'field' => 'mw.name',
     ),
-    'fid' => t('Image'),
     array(
       'data' => t('Horizontal Position'),
       'field' => 'mw.hor_position',
@@ -58,8 +58,8 @@ function media_watermark_get_sort_table_watermarks() {
 
   $query = db_select('media_watermark', 'mw')
     ->fields('mw', array(
-      'name',
       'fid',
+      'name',
       'hor_position',
       'ver_position',
       'hor_margin',
@@ -74,7 +74,6 @@ function media_watermark_get_sort_table_watermarks() {
   if (!empty($rows)) {
     foreach ($rows as $key => $value) {
       if (!empty($value['fid'])) {
-        $rows[$key]['name'] = $value['name'];
         $file = file_load($value['fid']);
         $image = theme('image_formatter', array(
           'item' => array(
@@ -89,6 +88,7 @@ function media_watermark_get_sort_table_watermarks() {
           'image_style' => 'media_watermark',
         ));
         $rows[$key]['fid'] = $image;
+        $rows[$key]['name'] = $value['name'];
         // Edit Delete.
         $edit_path = url('admin/config/media/watermark/edit/' . $value['wid']);
         $delete_path = url('admin/config/media/watermark/delete/' . $value['wid']);
@@ -103,6 +103,7 @@ function media_watermark_get_sort_table_watermarks() {
       '#empty' => t('Your table is empty'),
     );
     $element['pager_pager'] = array('#theme' => 'pager');
+    // Need to render elements to put them into form as #markup.
     return drupal_render($element);
   }
   else {

@@ -7,9 +7,12 @@
  */
 
 /**
- * Menu callback: displays interface to manage watermarks.
+ * Form constructor for the media watermark form.
  *
- * Path: admin/config/media/watermark.
+ * @see media_watermark_form_validate()
+ * @see media_watermark_form_submit()
+ *
+ * @ingroup forms
  */
 function media_watermark_form($form, &$form_state) {
   if (arg(5)) {
@@ -24,12 +27,12 @@ function media_watermark_form($form, &$form_state) {
     '#upload_validators' => array('file_validate_extensions' => array('png gif')),
     '#description' => 'allowed files extensions are .png and .gif',
     '#required' => TRUE,
-    '#default_value' => isset($values->fid) ? $values->fid : '',
+    '#default_value' => isset($values->fid) ? check_plain($values->fid) : '',
   );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#default_value' => isset($values->name) ? $values->name : '',
+    '#default_value' => isset($values->name) ? check_plain($values->name) : '',
     '#description' => t('Set watermark name.'),
     '#required' => TRUE,
   );
@@ -41,7 +44,7 @@ function media_watermark_form($form, &$form_state) {
       'middle' => t('middle'),
       'right' => t('right'),
     ),
-    '#default_value' => isset($values->hor_position) ? $values->hor_position : 'left',
+    '#default_value' => isset($values->hor_position) ? check_plain($values->hor_position) : 'left',
     '#required' => TRUE,
   );
   $form['ver_position'] = array(
@@ -52,41 +55,64 @@ function media_watermark_form($form, &$form_state) {
       'center' => t('center'),
       'bottom' => t('bottom'),
     ),
-    '#default_value' => isset($values->ver_position) ? $values->ver_position : 'bottom',
+    '#default_value' => isset($values->ver_position) ? check_plain($values->ver_position) : 'bottom',
     '#required' => TRUE,
   );
   $form['hor_margin'] = array(
     '#type' => 'textfield',
     '#title' => t('Horizontal margin, px'),
-    '#default_value' => isset($values->hor_margin) ? $values->hor_margin : '0',
+    '#default_value' => isset($values->hor_margin) ? check_plain($values->hor_margin) : '0',
     '#description' => t('Set minus or plus signed value for moving watermark to left or right from defined position.'),
     '#required' => TRUE,
   );
   $form['ver_margin'] = array(
     '#type' => 'textfield',
     '#title' => t('Vertical margin, px'),
-    '#default_value' => isset($values->ver_margin) ? $values->ver_margin : '0',
+    '#default_value' => isset($values->ver_margin) ? check_plain($values->ver_margin) : '0',
     '#description' => t('Set minus or plus signed value for moving watermark to higher or lower from defined position.'),
     '#required' => TRUE,
   );
 
-  // We add or update watermarks in validation function.
-  // Against this issue https://drupal.org/node/979158.
   $form['#validate'][] = 'media_watermark_form_validate';
+  $form['#submit'][] = 'media_watermark_form_submit';
+
   return system_settings_form($form);
 }
 
 /**
- * Validate callback for media_watermark_form() function.
+ * Form validation handler for media_watermark_form().
  *
- * Add or update existing watermarks.
- *
- * @param array $form
- *   form array
- * @param array $form_state
- *   from state array
+ * @see media_watermark_form_submit()
  */
 function media_watermark_form_validate(&$form, &$form_state) {
+  if (isset($form_state['values']['watermark_image'])) {
+    // Name validation.
+    if (is_string($form_state['values']['name']) && strlen($form_state['values']['name']) > 255) {
+      form_set_error('name', t('Too long name, it should be less then or equal to 255 character.'));
+    };
+    // Hor margin validation.
+    if (strlen($form_state['values']['hor_margin']) > 20) {
+      form_set_error('hor_margin', t('Too long horizontal margin, it should be less then or equal to 20 character.'));
+    }
+    elseif (!is_numeric($form_state['values']['hor_margin'])) {
+      form_set_error('hor_margin', t('Horizontal margin, should be numeric.'));
+    }
+    // Ver margin validation.
+    if (strlen($form_state['values']['ver_margin']) > 20) {
+      form_set_error('ver_margin', t('Too long vertical margin, it should be less then or equal to 20 character.'));
+    }
+    elseif (!is_numeric($form_state['values']['ver_margin'])) {
+      form_set_error('ver_margin', t('Vertical margin, should be numeric.'));
+    }
+  }
+}
+
+/**
+ * Form submission handler for media_watermark_form().
+ *
+ * @see media_watermark_form_validate()
+ */
+function media_watermark_form_submit(&$form, &$form_state) {
   if (isset($form_state['values']['watermark_image'])) {
     $data = array(
       'fid' => $form_state['values']['watermark_image'],
@@ -96,6 +122,9 @@ function media_watermark_form_validate(&$form, &$form_state) {
       'hor_margin' => $form_state['values']['hor_margin'],
       'ver_margin' => $form_state['values']['ver_margin'],
     );
+    // Sanitize all input.
+    $data = array_map('check_plain', $data);
+
     $file = file_load($form_state['values']['watermark_image']);
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
@@ -105,7 +134,7 @@ function media_watermark_form_validate(&$form, &$form_state) {
     if (arg(5)) {
       db_update('media_watermark')
         ->fields($data)
-        ->condition('wid', arg(5))
+        ->condition('wid',arg(5))
         ->execute();
       drupal_set_message(t("Watermark has been updated."));
 
