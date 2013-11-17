@@ -11,7 +11,11 @@
 function media_watermark_permission() {
   return array(
     'media watermark control' => array(
-      'title' => t('Manage watermarks on file entities'),
+      'title' => t('Configure watermarks'),
+      'description' => t('Configure watermarks, perform CRUD actions.'),
+    ),
+    'media watermark apply watermarks' => array(
+      'title' => t('Add existing watermarks'),
       'description' => t('Checkbox appear for controlling watermarks on file entities.'),
     ),
   );
@@ -118,46 +122,48 @@ function media_watermark_get_watermark($id) {
  * Implements hook_form_alter().
  */
 function media_watermark_form_alter(&$form, &$form_state, $form_id) {
-  if (in_array($form_id, array(
-    'file_entity_add_upload_multiple',
-    'file_entity_add_upload',
-    'media_add_upload',
-    'media_tab_upload',
-  ))
-  ) {
-    if (empty($form['field_file_image_alt_text']) && empty($form['field_file_image_title_text'])) {
-      $watermarks = media_watermark_get_watermarks();
-      if (!empty($watermarks)) {
-        $form['add_watermark'] = array(
-          '#type' => 'checkbox',
-          '#title' => t('Add watermark'),
-          '#default_value' => FALSE,
-          '#weight' => 20,
-        );
+  if (user_access('media watermark apply watermarks')) {
+    if (in_array($form_id, array(
+      'file_entity_add_upload_multiple',
+      'file_entity_add_upload',
+      'media_add_upload',
+      'media_tab_upload',
+    ))
+    ) {
+      if (empty($form['field_file_image_alt_text']) && empty($form['field_file_image_title_text'])) {
+        $watermarks = media_watermark_get_watermarks();
+        if (!empty($watermarks)) {
+          $form['add_watermark'] = array(
+            '#type' => 'checkbox',
+            '#title' => t('Add watermark'),
+            '#default_value' => FALSE,
+            '#weight' => 20,
+          );
 
-        $names = media_watermark_prepare_names($watermarks);
-        $form['watermarks_names'] = array(
-          '#type' => 'select',
-          '#options' => $names,
-          '#description' => t('To edit watermark just click on its image'),
-          '#weight' => 19,
-        );
-        // Hide select list if one watermark.
-        if (count($watermarks) == 1) {
-          $form['watermarks_names']['#prefix'] = '<div class="hide-select-list">';
-          $form['watermarks_names']['#suffix'] = '</div>';
+          $names = media_watermark_prepare_names($watermarks);
+          $form['watermarks_names'] = array(
+            '#type' => 'select',
+            '#options' => $names,
+            '#description' => t('To edit watermark just click on its image'),
+            '#weight' => 19,
+          );
+          // Hide select list if one watermark.
+          if (count($watermarks) == 1) {
+            $form['watermarks_names']['#prefix'] = '<div class="hide-select-list">';
+            $form['watermarks_names']['#suffix'] = '</div>';
+          }
+          $images = media_watermark_prepare_images($watermarks);
+          $form['watermarks_images'] = array(
+            '#type' => 'item',
+            '#markup' => $images,
+            '#weight' => 18,
+          );
+          $form['#attached']['js'] = array(
+            drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
+          );
+          // Add custom submit function.
+          array_unshift($form['#submit'], 'media_watermark_add_watermark');
         }
-        $images = media_watermark_prepare_images($watermarks);
-        $form['watermarks_images'] = array(
-          '#type' => 'item',
-          '#markup' => $images,
-          '#weight' => 18,
-        );
-        $form['#attached']['js'] = array(
-          drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
-        );
-        // Add custom submit function.
-        array_unshift($form['#submit'], 'media_watermark_add_watermark');
       }
     }
   }
