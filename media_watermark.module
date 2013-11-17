@@ -71,7 +71,7 @@ function media_watermark_menu() {
 /**
  * Function to get all watermarks array stored in db.
  *
- * @return array
+ * @return array|null
  *   all stored watermarks
  */
 function media_watermark_get_watermarks() {
@@ -225,6 +225,7 @@ function media_watermark_create_image($file_path, $form_state) {
     elseif ($watermark_extension == 'gif') {
       $watermark_img = imagecreatefromgif($watermark_filepath);
     }
+    module_load_include('inc', 'media_watermark', 'includes/media_watermark');
     $watermark = new MediaWatermark();
     $im = $watermark->addWatermark($img, $watermark_img, $watermark_obj, $ext);
     imagepng($im, $file_path);

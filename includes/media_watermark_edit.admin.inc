@@ -19,6 +19,11 @@ function media_watermark_edit_settings($form, &$form_state) {
     '#type' => 'item',
     '#markup' => $output,
   );
+
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'media_watermark') . '/media_watermark.css',
+  );
+
   return $form;
 }
 
@@ -96,9 +101,11 @@ function media_watermark_get_sort_table_watermarks() {
         $rows[$key]['fid'] = $image;
         $rows[$key]['name'] = $value['name'];
         // Edit Delete.
-        $edit_path = url('admin/config/media/watermark/edit/' . $value['wid']);
-        $delete_path = url('admin/config/media/watermark/delete/' . $value['wid']);
-        $rows[$key]['wid'] = '<a style="padding-right:10px;" href="' . $edit_path . '">' . t('Edit') . '</a><a href="' . $delete_path . '">' . t('Delete') . '</a>';
+        $edit_path = l(t('Edit'), 'admin/config/media/watermark/edit/' . $value['wid'], array('attributes' => array('class' => array('padding-right'))));
+        $delete_path = l(t('Delete'), 'admin/config/media/watermark/delete/' . $value['wid']);
+        // Used render to add two links using l() function in one array element.
+        $rows[$key]['wid'] = render($edit_path);
+        $rows[$key]['wid'] .= render($delete_path);
       }
     }
     // Prepare render array.
