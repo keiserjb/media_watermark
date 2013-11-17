@@ -8,32 +8,12 @@
  */
 
 /**
- * Form constructor for the media watermark edit settings form.
+ * Page callback: Displays a table of watermarks.
  *
- * @ingroup forms
- */
-function media_watermark_edit_settings($form, &$form_state) {
-  $form = array();
-  $output = media_watermark_get_sort_table_watermarks();
-  $form['markup'] = array(
-    '#type' => 'item',
-    '#markup' => $output,
-  );
-
-  $form['#attached']['css'] = array(
-    drupal_get_path('module', 'media_watermark') . '/media_watermark.css',
-  );
-
-  return $form;
-}
-
-/**
- * Function to get all watermarks array stored in db.
+ * @return array
+ *   A render array for a page containing a table of watermarks.
  *
- * Also display them as sortable table with pagination.
- *
- * @return string
- *   sorted table markup all watermarks with pagination
+ * @see media_watermark_menu()
  */
 function media_watermark_get_sort_table_watermarks() {
   $header = array(
@@ -116,8 +96,12 @@ function media_watermark_get_sort_table_watermarks() {
       '#empty' => t('Your table is empty'),
     );
     $element['pager_pager'] = array('#theme' => 'pager');
-    // Need to render elements to put them into form as #markup.
-    return drupal_render($element);
+
+    // Add css to style edit link padding.
+    drupal_add_css(drupal_get_path('module', 'media_watermark') . '/media_watermark.css',
+      array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+
+    return $element;
   }
   else {
     return t('Please add at least one watermark.');

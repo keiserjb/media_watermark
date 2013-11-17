@@ -30,8 +30,7 @@ function media_watermark_menu() {
   $items['admin/config/media/watermark'] = array(
     'title' => 'Media Watermark settings',
     'description' => 'Control how to apply watermark.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('media_watermark_edit_settings'),
+    'page callback' => 'media_watermark_get_sort_table_watermarks',
     'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_edit.admin.inc',
     'type' => MENU_NORMAL_ITEM,
