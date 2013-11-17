@@ -27,7 +27,7 @@
           $('#edit-watermarks-images .image-hidden', context).hide();
         }
       });
-      $('#edit-watermarks-names', context).change( function () {
+      $('#edit-watermarks-names', context).change(function () {
         var val = $('#edit-watermarks-names :selected', context).val();
         $('#edit-watermarks-images .image-hidden', context).hide();
         $('#edit-watermarks-images #image-' + val, context).show();
