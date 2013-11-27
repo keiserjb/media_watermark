@@ -27,12 +27,12 @@ function media_watermark_form($form, &$form_state) {
     '#upload_validators' => array('file_validate_extensions' => array('png gif')),
     '#description' => 'allowed files extensions are .png and .gif',
     '#required' => TRUE,
-    '#default_value' => isset($values->fid) ? check_plain($values->fid) : '',
+    '#default_value' => isset($values->fid) ? $values->fid : '',
   );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#default_value' => isset($values->name) ? check_plain($values->name) : '',
+    '#default_value' => isset($values->name) ? $values->name : '',
     '#description' => t('Set watermark name.'),
     '#required' => TRUE,
   );
@@ -44,7 +44,7 @@ function media_watermark_form($form, &$form_state) {
       'middle' => t('middle'),
       'right' => t('right'),
     ),
-    '#default_value' => isset($values->hor_position) ? check_plain($values->hor_position) : 'left',
+    '#default_value' => isset($values->hor_position) ? $values->hor_position : 'left',
     '#required' => TRUE,
   );
   $form['ver_position'] = array(
@@ -55,20 +55,20 @@ function media_watermark_form($form, &$form_state) {
       'center' => t('center'),
       'bottom' => t('bottom'),
     ),
-    '#default_value' => isset($values->ver_position) ? check_plain($values->ver_position) : 'bottom',
+    '#default_value' => isset($values->ver_position) ? $values->ver_position : 'bottom',
     '#required' => TRUE,
   );
   $form['hor_margin'] = array(
     '#type' => 'textfield',
     '#title' => t('Horizontal margin, px'),
-    '#default_value' => isset($values->hor_margin) ? check_plain($values->hor_margin) : '0',
+    '#default_value' => isset($values->hor_margin) ? $values->hor_margin : '0',
     '#description' => t('Set minus or plus signed value for moving watermark to left or right from defined position.'),
     '#required' => TRUE,
   );
   $form['ver_margin'] = array(
     '#type' => 'textfield',
     '#title' => t('Vertical margin, px'),
-    '#default_value' => isset($values->ver_margin) ? check_plain($values->ver_margin) : '0',
+    '#default_value' => isset($values->ver_margin) ? $values->ver_margin : '0',
     '#description' => t('Set minus or plus signed value for moving watermark to higher or lower from defined position.'),
     '#required' => TRUE,
   );
@@ -122,8 +122,6 @@ function media_watermark_form_submit(&$form, &$form_state) {
       'hor_margin' => $form_state['values']['hor_margin'],
       'ver_margin' => $form_state['values']['ver_margin'],
     );
-    // Sanitize all input.
-    $data = array_map('check_plain', $data);
 
     $file = file_load($form_state['values']['watermark_image']);
     $file->status = FILE_STATUS_PERMANENT;

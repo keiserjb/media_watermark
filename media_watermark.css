@@ -3,6 +3,6 @@
  * Media watremark css file.
  */
 
-.padding-right {
-  padding-right: 10px;
+ul.edit-delete-links li {
+    list-style: none;
 }

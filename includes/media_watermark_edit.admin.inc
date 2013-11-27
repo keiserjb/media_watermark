@@ -62,8 +62,12 @@ function media_watermark_get_sort_table_watermarks() {
   $query = $query->extend('PagerDefault')->limit(10);
   $rows = $query->execute();
   $rows = $rows->fetchAll(PDO::FETCH_ASSOC);
+
   if (!empty($rows)) {
-    foreach ($rows as $key => $value) {
+    foreach ($rows as $key => &$value) {
+      // Clean output data.
+      $value = array_map('check_plain', $value);
+
       if (!empty($value['fid'])) {
         $file = file_load($value['fid']);
         $image = theme('image_formatter', array(
@@ -80,12 +84,25 @@ function media_watermark_get_sort_table_watermarks() {
         ));
         $rows[$key]['fid'] = $image;
         $rows[$key]['name'] = $value['name'];
-        // Edit Delete.
-        $edit_path = l(t('Edit'), 'admin/config/media/watermark/edit/' . $value['wid'], array('attributes' => array('class' => array('padding-right'))));
-        $delete_path = l(t('Delete'), 'admin/config/media/watermark/delete/' . $value['wid']);
-        // Used render to add two links using l() function in one array element.
-        $rows[$key]['wid'] = render($edit_path);
-        $rows[$key]['wid'] .= render($delete_path);
+        // Create Edit Delete render array.
+        $links = array(
+          'links' => array(
+            '#theme' => 'links',
+            '#links' => array(
+              array(
+                'title' => 'Edit',
+                'href' => 'admin/config/media/watermark/edit/' . $value['wid'],
+              ),
+              array(
+                'title' => 'Delete',
+                'href' => 'admin/config/media/watermark/delete/' . $value['wid'],
+              ),
+            ),
+            "#attributes" => array('class' => array('edit-delete-links')),
+          ),
+        );
+        // Used render because $links array is not processed into theme table.
+        $rows[$key]['wid'] = render($links);
       }
     }
     // Prepare render array.
@@ -97,7 +114,7 @@ function media_watermark_get_sort_table_watermarks() {
     );
     $element['pager_pager'] = array('#theme' => 'pager');
 
-    // Add css to style edit link padding.
+    // Add css to style edit/delete link.
     drupal_add_css(drupal_get_path('module', 'media_watermark') . '/media_watermark.css',
       array('group' => CSS_DEFAULT, 'every_page' => FALSE));
 
