@@ -72,11 +72,9 @@ function media_watermark_form($form, &$form_state) {
     '#description' => t('Set minus or plus signed value for moving watermark to higher or lower from defined position.'),
     '#required' => TRUE,
   );
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
 
-  $form['#validate'][] = 'media_watermark_form_validate';
-  $form['#submit'][] = 'media_watermark_form_submit';
-
-  return system_settings_form($form);
+  return $form;
 }
 
 /**
@@ -91,18 +89,18 @@ function media_watermark_form_validate(&$form, &$form_state) {
       form_set_error('name', t('Too long name, it should be less then or equal to 255 character.'));
     };
     // Hor margin validation.
-    if (strlen($form_state['values']['hor_margin']) > 20) {
-      form_set_error('hor_margin', t('Too long horizontal margin, it should be less then or equal to 20 character.'));
-    }
-    elseif (!is_numeric($form_state['values']['hor_margin'])) {
+    if (!is_numeric($form_state['values']['hor_margin'])) {
       form_set_error('hor_margin', t('Horizontal margin, should be numeric.'));
     }
-    // Ver margin validation.
-    if (strlen($form_state['values']['ver_margin']) > 20) {
-      form_set_error('ver_margin', t('Too long vertical margin, it should be less then or equal to 20 character.'));
+    elseif (strlen($form_state['values']['hor_margin']) > 20) {
+      form_set_error('hor_margin', t('Too long horizontal margin, it should be less then or equal to 20 digits.'));
     }
-    elseif (!is_numeric($form_state['values']['ver_margin'])) {
+    // Ver margin validation.
+    if (!is_numeric($form_state['values']['ver_margin'])) {
       form_set_error('ver_margin', t('Vertical margin, should be numeric.'));
+    }
+    elseif (strlen($form_state['values']['ver_margin']) > 20) {
+      form_set_error('ver_margin', t('Too long vertical margin, it should be less then or equal to 20 digits.'));
     }
   }
 }

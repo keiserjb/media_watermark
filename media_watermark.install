@@ -94,6 +94,8 @@ function media_watermark_install() {
     $path = drupal_get_path('module', 'media_watermark') . '/includes/img/' . $value['file'];
     $file_temp = file_get_contents($path);
     $file_temp = file_save_data($file_temp, 'public://watermark' . $value['file'], FILE_EXISTS_RENAME);
+    global $user;
+    file_usage_add($file_temp, 'media_watermark', 'image', $user->uid);
     db_insert('media_watermark')
       ->fields(array(
         'fid' => $file_temp->fid,
@@ -102,7 +104,6 @@ function media_watermark_install() {
         'ver_position' => 'bottom',
         'hor_margin' => '0',
         'ver_margin' => '0',
-
       ))
       ->execute();
   }
@@ -113,4 +114,16 @@ function media_watermark_install() {
  */
 function media_watermark_uninstall() {
   image_style_delete(image_style_load('media_watermark'));
+
+  // Check for files in use by media_watermark.
+  $result = db_query("SELECT fid FROM {file_usage} WHERE module = 'media_watermark'");
+  foreach ($result as $record) {
+    $file = file_load($record->fid);
+    if ($file) {
+      // Remove all usage for this file by my_module_name.
+      file_usage_delete($file, 'media_watermark', NULL, NULL, 0);
+      // Should only delete if file not in use by another module.
+      file_delete($file);
+    }
+  }
 }

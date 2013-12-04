@@ -18,7 +18,6 @@ function media_watermark_delete_form($form, &$form_state) {
   $form_state['watermark_arg'] = arg(5);
   $name = media_watermark_get_name($form_state['watermark_arg']);
   if (!empty($name)) {
-    $form['#submit'][] = 'media_watermark_delete_form_submit';
     $question = t('Are you sure you want to delete %name?', array('%name' => $name));
     $path = 'admin/config/media/watermark';
     return confirm_form($form, $question, $path, NULL, t('Delete'), NULL, 'confirm');
