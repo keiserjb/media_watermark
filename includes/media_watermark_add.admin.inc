@@ -25,7 +25,7 @@ function media_watermark_form($form, &$form_state) {
     '#title' => t('Watermark image'),
     '#upload_location' => 'public://watermark',
     '#upload_validators' => array('file_validate_extensions' => array('png gif')),
-    '#description' => 'allowed files extensions are .png and .gif',
+    '#description' => t('allowed files extensions are .png and .gif'),
     '#required' => TRUE,
     '#default_value' => isset($values->fid) ? $values->fid : '',
   );
