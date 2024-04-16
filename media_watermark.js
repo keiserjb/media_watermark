@@ -6,7 +6,7 @@
  */
 
 (function ($) {
-  Drupal.behaviors.flex2_media_watermark = {
+  Backdrop.behaviors.flex2_media_watermark = {
     attach: function (context, settings) {
       $('.hide-select-list', context).hide();
       $('#edit-watermarks-images .image-hidden', context).hide();

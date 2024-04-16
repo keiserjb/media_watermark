@@ -68,32 +68,36 @@ function media_watermark_schema() {
  * Implements hook_install().
  */
 function media_watermark_install() {
-  $style = image_style_save(array('name' => 'media_watermark'));
-  $effect = array(
-    'name' => 'image_scale',
-    'data' => array(
-      'width' => 200,
-      'height' => NULL,
-      'upscale' => FALSE,
-    ),
-    'isid' => $style['isid'],
+  // Define the image style and its effects
+  $style = array(
+    'name' => 'media_watermark',
+    'label' => 'Media Watermark',
+    'module' => 'media_watermark',
+    'effects' => array(
+      array(
+        'name' => 'image_scale',
+        'data' => array('width' => 200, 'height' => NULL, 'upscale' => FALSE),
+        'weight' => 1
+      )
+    )
   );
-  image_effect_save($effect);
-  // Need to prepare default watermarks.
+
+  // Save the configuration
+  $config = config('image.style.media_watermark');
+  $config->setData($style);
+  $config->save();
+
+  // Prepare default watermarks
   $data = array(
-    'linux' => array(
-      'file' => 'linux.png',
-      'name' => 'png watermark',
-    ),
-    'drupal' => array(
-      'file' => 'drupal-watermark.gif',
-      'name' => 'gif watermark',
+    'backdrop' => array(
+      'file' => 'backdrop-watermark.png',
+      'name' => 'Backdrop watermark',
     ),
   );
   foreach ($data as $value) {
-    $path = drupal_get_path('module', 'media_watermark') . '/includes/img/' . $value['file'];
+    $path = backdrop_get_path('module', 'media_watermark') . '/includes/img/' . $value['file'];
     $file_temp = file_get_contents($path);
-    $file_temp = file_save_data($file_temp, 'public://watermark' . $value['file'], FILE_EXISTS_RENAME);
+    $file_temp = file_save_data($file_temp, 'public://watermark-' . $value['file'], FILE_EXISTS_RENAME);
     global $user;
     file_usage_add($file_temp, 'media_watermark', 'image', $user->uid);
     db_insert('media_watermark')
@@ -109,21 +113,24 @@ function media_watermark_install() {
   }
 }
 
+
 /**
  * Implements hook_uninstall().
  */
 function media_watermark_uninstall() {
-  image_style_delete(image_style_load('media_watermark'));
-
-  // Check for files in use by media_watermark.
   $result = db_query("SELECT fid FROM {file_usage} WHERE module = 'media_watermark'");
   foreach ($result as $record) {
-    $file = file_load($record->fid);
+    $file = file_load($record->fid);  // Correctly loading file by ID
     if ($file) {
-      // Remove all usage for this file by my_module_name.
-      file_usage_delete($file, 'media_watermark', NULL, NULL, 0);
-      // Should only delete if file not in use by another module.
-      file_delete($file);
+      file_usage_delete($file, 'media_watermark');
+      if (!file_usage_list($file)) {
+        file_delete($file->fid);  // Ensure only the file ID is passed
+      }
     }
   }
+
+  db_drop_table('media_watermark');  // Ensure this happens after all file operations
+  config('image.style.media_watermark')->delete();  // Config deletion should not affect files
 }
+
+

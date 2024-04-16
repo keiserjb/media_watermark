@@ -49,14 +49,14 @@ function media_watermark_get_sort_table_watermarks() {
 
   $query = db_select('media_watermark', 'mw')
     ->fields('mw', array(
-      'fid',
-      'name',
-      'hor_position',
-      'ver_position',
-      'hor_margin',
-      'ver_margin',
-      'wid',
-    ));
+    'fid',
+    'name',
+    'hor_position',
+    'ver_position',
+    'hor_margin',
+    'ver_margin',
+    'wid',
+  ));
 
   $query = $query->extend('TableSort')->orderByHeader($header);
   $query = $query->extend('PagerDefault')->limit(10);
@@ -115,7 +115,7 @@ function media_watermark_get_sort_table_watermarks() {
     $element['pager_pager'] = array('#theme' => 'pager');
 
     // Add css to style edit/delete link.
-    drupal_add_css(drupal_get_path('module', 'media_watermark') . '/media_watermark.css',
+    backdrop_add_css(backdrop_get_path('module', 'media_watermark') . '/media_watermark.css',
       array('group' => CSS_DEFAULT, 'every_page' => FALSE));
 
     return $element;

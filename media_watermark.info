@@ -1,7 +1,6 @@
 name = Media Watermark
 description = Provides watermark functionality for images.
-core = "7.x"
+backdrop = 1.x
+type = module
 package = "Media"
 configure = "admin/config/media/watermark"
-dependencies[] = media (>=7.x-2.x)
-dependencies[] = file_entity (>=7.x-2.x)

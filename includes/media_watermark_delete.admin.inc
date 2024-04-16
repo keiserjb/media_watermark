@@ -34,6 +34,6 @@ function media_watermark_delete_form_submit($form, &$form_state) {
   db_delete('media_watermark')
     ->condition('wid', $form_state['watermark_arg'])
     ->execute();
-  drupal_set_message(t('Watermark has been deleted.'));
+  backdrop_set_message(t('Watermark has been deleted.'));
   $form_state['redirect'] = 'admin/config/media/watermark';
 }

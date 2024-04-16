@@ -16,7 +16,7 @@
  */
 function media_watermark_form($form, &$form_state) {
   if (arg(5)) {
-    drupal_set_title(t('Edit watermark'));
+    backdrop_set_title(t('Edit watermark'));
     $values = media_watermark_get_watermark(arg(5));
   }
   $form['#attributes'] = array('enctype' => "multipart/form-data");
@@ -24,8 +24,8 @@ function media_watermark_form($form, &$form_state) {
     '#type' => 'managed_file',
     '#title' => t('Watermark image'),
     '#upload_location' => 'public://watermark',
-    '#upload_validators' => array('file_validate_extensions' => array('png gif')),
-    '#description' => t('allowed files extensions are .png and .gif'),
+    '#upload_validators' => array('file_validate_extensions' => array('png gif jpg jpeg')),
+    '#description' => t('allowed files extensions are .png, jpg, jpeg and .gif'),
     '#required' => TRUE,
     '#default_value' => isset($values->fid) ? $values->fid : '',
   );
@@ -72,7 +72,10 @@ function media_watermark_form($form, &$form_state) {
     '#description' => t('Set minus or plus signed value for moving watermark to higher or lower from defined position.'),
     '#required' => TRUE,
   );
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
 
   return $form;
 }
@@ -87,7 +90,7 @@ function media_watermark_form_validate(&$form, &$form_state) {
     // Name validation.
     if (is_string($form_state['values']['name']) && strlen($form_state['values']['name']) > 255) {
       form_set_error('name', t('Too long name, it should be less then or equal to 255 character.'));
-    };
+    }
     // Hor margin validation.
     if (!is_numeric($form_state['values']['hor_margin'])) {
       form_set_error('hor_margin', t('Horizontal margin, should be numeric.'));
@@ -132,14 +135,14 @@ function media_watermark_form_submit(&$form, &$form_state) {
         ->fields($data)
         ->condition('wid', arg(5))
         ->execute();
-      drupal_set_message(t("Watermark has been updated."));
+      backdrop_set_message(t("Watermark has been updated."));
 
     }
     else {
       db_insert('media_watermark')
         ->fields($data)
         ->execute();
-      drupal_set_message(t("Watermark has been added."));
+      backdrop_set_message(t("Watermark has been added."));
     }
   }
   $form_state['redirect'] = 'admin/config/media/watermark';

@@ -38,7 +38,7 @@ function media_watermark_menu() {
 
   $items['admin/config/media/watermark/add'] = array(
     'title' => 'Add watermark',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('media_watermark_form'),
     'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_add.admin.inc',
@@ -48,7 +48,7 @@ function media_watermark_menu() {
   $items['admin/config/media/watermark/edit/%'] = array(
     'title' => 'Edit watermark',
     'description' => 'Edit watermark.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('media_watermark_form'),
     'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_add.admin.inc',
@@ -57,7 +57,7 @@ function media_watermark_menu() {
   $items['admin/config/media/watermark/delete/%'] = array(
     'title' => 'Delete watermark',
     'description' => 'Delete watermark.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('media_watermark_delete_form'),
     'access arguments' => array('media watermark control'),
     'file' => 'includes/media_watermark_delete.admin.inc',
@@ -129,10 +129,8 @@ function media_watermark_get_watermark($id) {
 function media_watermark_form_alter(&$form, &$form_state, $form_id) {
   if (user_access('media watermark apply watermarks')) {
     if (in_array($form_id, array(
-      'file_entity_add_upload_multiple',
-      'file_entity_add_upload',
-      'media_add_upload',
-      'media_tab_upload',
+      'file_add_form',
+      'filter_format_editor_image_form',
     ))
     ) {
       if (empty($form['field_file_image_alt_text']) && empty($form['field_file_image_title_text'])) {
@@ -159,7 +157,7 @@ function media_watermark_form_alter(&$form, &$form_state, $form_id) {
           }
           $form['watermarks_images'] = media_watermark_prepare_images($watermarks);
           $form['#attached']['js'] = array(
-            drupal_get_path('module', 'media_watermark') . '/media_watermark.js',
+            backdrop_get_path('module', 'media_watermark') . '/media_watermark.js',
           );
           // Add custom submit function.
           array_unshift($form['#submit'], 'media_watermark_add_watermark');
@@ -176,12 +174,12 @@ function media_watermark_add_watermark(&$form, &$form_state) {
   if ($form_state['values']['add_watermark']) {
     // Uploaded file.
     if (is_object($form_state['values']['upload'])) {
-      $file_path = drupal_realpath($form_state['values']['upload']->uri);
+      $file_path = backdrop_realpath($form_state['values']['upload']->uri);
       media_watermark_create_image($file_path, $form_state);
     }
     elseif (is_int($form_state['values']['upload']) || is_string($form_state['values']['upload'])) {
       $uploaded = file_load($form_state['values']['upload']);
-      $file_path = drupal_realpath($uploaded->uri);
+      $file_path = backdrop_realpath($uploaded->uri);
       media_watermark_create_image($file_path, $form_state);
     }
     else {
@@ -204,7 +202,7 @@ function media_watermark_create_image($file_path, $form_state) {
     array(':fid' => $form_state['values']['watermarks_names']));
   $watermark_obj = $watermark_obj->fetchObject();
   $watermark_file = file_load($watermark_obj->fid);
-  $watermark_filepath = drupal_realpath($watermark_file->uri);
+  $watermark_filepath = backdrop_realpath($watermark_file->uri);
   $watermark_extension = pathinfo($watermark_filepath, PATHINFO_EXTENSION);
   // Check uploaded image extension.
   $ext = pathinfo($file_path, PATHINFO_EXTENSION);
@@ -225,10 +223,25 @@ function media_watermark_create_image($file_path, $form_state) {
     elseif ($watermark_extension == 'gif') {
       $watermark_img = imagecreatefromgif($watermark_filepath);
     }
+    elseif ($watermark_extension == 'jpg' || $watermark_extension == 'jpeg') {
+      $watermark_img = imagecreatefromjpeg($watermark_filepath);
+    }
     module_load_include('inc', 'media_watermark', 'includes/media_watermark');
     $watermark = new MediaWatermark();
     $im = $watermark->addWatermark($img, $watermark_img, $watermark_obj, $ext);
-    imagepng($im, $file_path);
+    // Adjust saving based on original image extension
+    switch ($ext) {
+      case 'jpg':
+      case 'jpeg':
+        imagejpeg($im, $file_path); // Save as JPEG
+        break;
+      case 'png':
+        imagepng($im, $file_path); // Save as PNG
+        break;
+      case 'gif':
+        imagegif($im, $file_path); // Save as GIF
+        break;
+    }
     imagedestroy($im);
     ob_end_clean();
   }
@@ -304,10 +317,10 @@ function media_watermark_prepare_images($results) {
  *   batch operations array
  */
 function media_watermark_prepare_batch($form_state) {
-  drupal_set_message(t('Adding watermarks.'));
+  backdrop_set_message(t('Adding watermarks.'));
 
   foreach ($form_state['files'] as $value) {
-    $file_path = drupal_realpath($value->uri);
+    $file_path = backdrop_realpath($value->uri);
     $operations[] = array(
       'media_watermark_process_multiple_images',
       array($file_path, $form_state),
@@ -363,10 +376,10 @@ function media_watermark_process_multiple_images($file_path, $form_state, &$cont
 function media_watermark_batch_finished($success, $results, $operations) {
   if ($success) {
     $count = count($results);
-    drupal_set_message(t('Added watermarks to @count images', array('@count' => $count)));
+    backdrop_set_message(t('Added watermarks to @count images', array('@count' => $count)));
   }
   else {
-    drupal_set_message(t('Finished with errors.'), 'error');
+    backdrop_set_message(t('Finished with errors.'), 'error');
   }
 }
 
@@ -374,7 +387,7 @@ function media_watermark_batch_finished($success, $results, $operations) {
  * Function which make same things as file_entity__add_upload_multiple_submit().
  */
 function media_watermark_add_upload_multiple_submit($form, &$form_state) {
-  $scheme = variable_get('file_default_scheme', 'public') . '://';
+  $scheme = config_get('system.performance', 'file_default_scheme') . '://';
   foreach ($form_state['values']['upload'] as $uploaded_file) {
 
     if ($uploaded_file['status'] == 'done') {
@@ -404,7 +417,7 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   if (file_entity_access('edit') && module_exists('multiform')) {
     $destination = array('destination' => 'admin/content/file');
     if (isset($_GET['destination'])) {
-      $destination = drupal_get_destination();
+      $destination = backdrop_get_destination();
       unset($_GET['destination']);
     }
     $form_state['redirect'] = array(
@@ -415,4 +428,13 @@ function media_watermark_add_upload_multiple_submit($form, &$form_state) {
   else {
     $form_state['redirect'] = 'admin/content/file';
   }
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function media_watermark_autoload_info() {
+  return array(
+    'MediaWatermark' => 'includes/media_watermark.inc',
+  );
 }
